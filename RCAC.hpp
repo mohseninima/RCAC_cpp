@@ -24,6 +24,7 @@ struct rcacRLSFlags
     Eigen::VectorXd theta_0;    
 };
 
+/*
 struct rcacGradFlags
 {
     //RCAC Flags
@@ -31,6 +32,7 @@ struct rcacGradFlags
     int k_0;
     Eigen::VectorXd theta_0;    
 };
+*/
 
 struct rcacFilt
 {
@@ -50,12 +52,14 @@ class RCAC
             rcacFilt &FILT
         );
 
+        /*
         //Function initGrad: Initializes RCAC using gradient descent with the 
         //given flags and filter values
         void initGrad(
             rcacGradFlags &FLAGS,
             rcacFilt &FILT
         );
+        */
 
         //Function oneStep: Compute one step of RCAC
         void oneStep(
@@ -67,28 +71,32 @@ class RCAC
         //Function getControl: Get the computed control input
     
     private:
+        //Function initRegressor: initialize the regressor variables
+        void initRegressor();
+
+        //Function initFiltered: initialize filtered variables
+        void initFiltered();
+
         //Function computeFiltered: compute the filtered variables
         void computeFiltered();
 
-        //Function initFiltered: initialize filtered variables, given a flag struct
-        template < typename T >
-        void initFiltered(
-            T &FLAGS,
-            rcacFilt &FILT
-        );
-
-        /*
+        
         //RCAC Flags
+        int lz;
+        int ly;
+        int lu;
         int Nc;
+        int k_0;
+        int lambda;
+
+        //RLS FLAGS
+        Eigen::VectorXd theta_0;
         Eigen::MatrixXd Rtheta;
         Eigen::MatrixXd Ru;
         Eigen::MatrixXd Rz;
-        int k_0;
-        int lambda;
-        Eigen::VectorXd theta_0;
-        */
-        rcacRLSFlags rlsFLAGS;
-        rcacGradFlags gradFLAGS;
+
+
+        //rcacGradFlags gradFLAGS;
 
         //RCAC Filter
         /*
@@ -115,6 +123,8 @@ class RCAC
         Eigen::VectorXd theta;
         Eigen::VectorXd uOut;
         Eigen::VectorXd uIn;
+        Eigen::VectorXd uphi;
+        Eigen::VectorXd yphi;
 
         //RCAC Types: tell the algorithm what type of RCAC to use
         bool rcacRLS;
