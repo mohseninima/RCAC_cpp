@@ -12,6 +12,9 @@
 struct rcacRLSFlags
 {
     //RCAC Flags
+    int lz;
+    int ly;
+    int lu;
     int Nc;
     Eigen::MatrixXd Rtheta;
     Eigen::MatrixXd Ru;
@@ -64,6 +67,16 @@ class RCAC
         //Function getControl: Get the computed control input
     
     private:
+        //Function computeFiltered: compute the filtered variables
+        void computeFiltered();
+
+        //Function initFiltered: initialize filtered variables, given a flag struct
+        template < typename T >
+        void initFiltered(
+            T &FLAGS,
+            rcacFilt &FILT
+        );
+
         /*
         //RCAC Flags
         int Nc;
@@ -88,12 +101,14 @@ class RCAC
         rcacFilt FILT;
 
         //RCAC Filtered Variables
-        std::deque<Eigen::VectorXd> ubar;
-        std::deque<Eigen::VectorXd> ufbar;
-        std::deque<Eigen::VectorXd> zbar;
-        std::deque<Eigen::VectorXd> zfbar;
-        std::deque<Eigen::MatrixXd> Phibar;
-        std::deque<Eigen::MatrixXd> Phifbar;  
+        std::deque<Eigen::VectorXd> uBar;
+        std::deque<Eigen::VectorXd> ufBar;
+        std::deque<Eigen::VectorXd> zBar;
+        std::deque<Eigen::VectorXd> zfBar;
+        //std::deque<Eigen::MatrixXd> uPhiBar;
+        //std::deque<Eigen::MatrixXd> yPhiBar;
+        std::deque<Eigen::MatrixXd> PhiBar;
+        std::deque<Eigen::MatrixXd> PhifBar;  
 
         //RCAC Working variables
         Eigen::MatrixXd P;
@@ -104,6 +119,9 @@ class RCAC
         //RCAC Types: tell the algorithm what type of RCAC to use
         bool rcacRLS;
         bool rcacGrad;
+
+        //Counter: if kk >= k_0, start RCAC control input
+        int kk = 1;
 };
 
 #endif
