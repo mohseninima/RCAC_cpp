@@ -1,6 +1,8 @@
 #include "RCAC.hpp"
 #include <iostream>
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
+#include <unsupported/Eigen/KroneckerProduct>
 
 //Name: Nima Mohseni
 //Date: 12/29/2019
@@ -63,22 +65,92 @@ void RCAC::oneStep(
     Eigen::VectorXd &yIn
 )
 {
+    //Compute Phi and phi before filtering only on the first step
     Eigen::VectorXd phi(uphi.rows()+yphi.rows(),1);
-    phi << uphi, yphi;
+    Eigen::MatrixXd eye_lu =  Eigen::MatrixXd::Identity(lu,lu);
+    if (kk == 0)
+    {
+        //Create phi with Nc past u and y measurements        
+        phi << uphi, yphi;
 
+        //Create Phi with kron(phi',I_lu)        
+        Phi = Eigen::kroneckerProduct(phi.transpose(), eye_lu);
+    }
+
+    //Add Phi and u to the list of past Phis and us for filtering
+    uBar.push_front(uIn);
+    PhiBar.push_front(Phi);
+    //remove the oldest Phi
+    uBar.pop_back();
+    PhiBar.pop_back();
+
+    //Filter the u, z, and Phi variables
     computeFiltered();
 
+    //Compute Controller Update
+    coeffUpdate(zIn);
 
     //add uIn and yIn to the phi stack
-    uphi << uIn, uphi.head((Nc-1)*lu);
-    yphi << yIn, yphi.head((Nc-1)*ly);
+    Eigen::MatrixXd uphitemp;
+    Eigen::MatrixXd yphitemp;
+    uphitemp << uIn, uphi.head((Nc-1)*lu);
+    uphi = uphitemp;
+    yphitemp << yIn, yphi.head((Nc-1)*ly);
+    yphi= yphitemp;
+
+    //Create phi with Nc past u and y measurements. Now containing current values  
+    phi << uphi, yphi;
+
+    //Create Phi(k+1) with kron(phi',I_lu)        
+    Phi = Eigen::kroneckerProduct(phi.transpose(), eye_lu);
+
+    //compute control input
+    uOut = Phi*theta;
 
     //Increment kk
     kk++;
 }
 
+void RCAC::coeffUpdate(
+    Eigen::VectorXd &zIn
+)
+{
+    Eigen::MatrixXd Rsum = Rz + Ru;
+    Eigen::MatrixXd Gamma;
+
+    Gamma = lambda*Rsum.inverse() + PhifBar[0]*P*PhifBar[0].transpose();
+    P = (1/lambda)*P-(1/lambda)*P*PhifBar[0].transpose()*Gamma.inverse()
+        *PhifBar[0]*P;
+    theta = theta - P*PhifBar[0].transpose()*Gamma.inverse()
+            *(PhifBar[0].transpose()*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]));
+}
+
 void RCAC::computeFiltered()
 {
+    //Loop through and filter the coefficients
+    Eigen::MatrixXd ufSum = Eigen::MatrixXd::Zero(lz, 1);
+    Eigen::MatrixXd PhifSum = Eigen::MatrixXd::Zero(lz, Nc*lu*(lu+ly));
+
+    //Filter the numerator coefficients
+    for (int i = 0; i < FILT.filtNu.cols(); i++)
+    {
+        ufSum = FILT.filtNu[i]*uBar[i] + ufSum;
+        PhifSum = FILT.filtNu[i]*PhiBar[i] + PhifSum;
+    }
+
+    //Filter the Denominator coefficients coefficients
+    for (int i = 0; i < FILT.filtDu.cols(); i++)
+    {
+        ufSum = FILT.filtDu[i]*ufBar[i] + ufSum;
+        PhifSum = FILT.filtDu[i]*PhifBar[i] + PhifSum;
+    }
+
+    //Add the sum to the list of past filtered values for future filtering
+    ufBar.push_front(ufSum);
+    PhifBar.push_front(PhifSum);
+    //remove the oldest filtered value
+    ufBar.pop_back();
+    PhifBar.pop_back();
 
 }
 

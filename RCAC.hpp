@@ -2,6 +2,8 @@
 #define _RCAC_HPP_
 
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
+#include <unsupported/Eigen/KroneckerProduct>
 #include <deque>
 
 //Name: Nima Mohseni
@@ -69,8 +71,17 @@ class RCAC
         );
 
         //Function getControl: Get the computed control input
-    
+        Eigen::VectorXd getControl()
+        {
+            return uOut;
+        };
+
     private:
+        //Function coeffUpdate: Compute the RCAC coefficient update
+        void coeffUpdate(
+            Eigen::VectorXd &zIn
+        );
+
         //Function initRegressor: initialize the regressor variables
         void initRegressor();
 
@@ -119,12 +130,13 @@ class RCAC
         std::deque<Eigen::MatrixXd> PhifBar;  
 
         //RCAC Working variables
-        Eigen::MatrixXd P;
+        Eigen::MatrixXd P; 
         Eigen::VectorXd theta;
         Eigen::VectorXd uOut;
         Eigen::VectorXd uIn;
-        Eigen::VectorXd uphi;
-        Eigen::VectorXd yphi;
+        Eigen::MatrixXd Phi; //kron([uphi;yphi]', eye_lu)
+        Eigen::VectorXd uphi; //Past Nc u values
+        Eigen::VectorXd yphi; //Past Nc y values
 
         //RCAC Types: tell the algorithm what type of RCAC to use
         bool rcacRLS;
