@@ -1,8 +1,8 @@
 #include "RCAC.hpp"
 #include <iostream>
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
-#include <unsupported/Eigen/KroneckerProduct>
+#include "Eigen/Core"
+#include "Eigen/Sparse"
+#include "unsupported/Eigen/KroneckerProduct"
 
 //Name: Nima Mohseni
 //Date: 12/29/2019
@@ -24,6 +24,7 @@ void RCAC::initRLS(
     lambda = FLAGS.lambda;
     theta_0 = FLAGS.theta_0;
     Rtheta = FLAGS.Rtheta;
+    P = Rtheta.inverse();
     Ru = FLAGS.Ru;
     Rz = FLAGS.Rz;
     this->FILT = FILT;
@@ -33,6 +34,8 @@ void RCAC::initRLS(
 
     //Initialized Filtered Variables
     initFiltered();
+
+    kk = 0;
 
     //Tell that RLS RCAC is being used
     rcacRLS = true;
@@ -75,6 +78,9 @@ void RCAC::oneStep(
 
         //Create Phi with kron(phi',I_lu)        
         Phi = Eigen::kroneckerProduct(phi.transpose(), eye_lu);
+
+        //Initialize theta
+        theta = theta_0;
     }
 
     //Add Phi and u to the list of past Phis and us for filtering
@@ -83,30 +89,50 @@ void RCAC::oneStep(
     //remove the oldest Phi
     uBar.pop_back();
     PhiBar.pop_back();
+    
+    //Filter the u, z, and Phi variables if there is enough data to filter
+    if (kk > FILT.filtNu.cols()/lu)
+    {
+        computeFiltered();
+    }
 
-    //Filter the u, z, and Phi variables
-    computeFiltered();
-
-    //Compute Controller Update
-    coeffUpdate(zIn);
+    //Compute Controller Update if kk >= k_0
+    if (kk >= k_0)
+    {
+        coeffUpdate(zIn);
+    }
 
     //add uIn and yIn to the phi stack
-    Eigen::MatrixXd uphitemp;
-    Eigen::MatrixXd yphitemp;
+    Eigen::MatrixXd uphitemp(Nc*lu, 1);
+    Eigen::MatrixXd yphitemp(Nc*ly, 1);
     uphitemp << uIn, uphi.head((Nc-1)*lu);
+    //uphitemp << uIn, uphi.block(0,0,(Nc-1)*lu,1);
     uphi = uphitemp;
     yphitemp << yIn, yphi.head((Nc-1)*ly);
+    //yphitemp << yIn, yphi.block(0,0,(Nc-1)*ly,1);
     yphi= yphitemp;
 
-    //Create phi with Nc past u and y measurements. Now containing current values  
-    phi << uphi, yphi;
+    //update Phi only if there is enough data
+    //Create phi with Nc past u and y measurements. Now containing current values 
+    if (kk >= Nc)
+    { 
+        phi << uphi, yphi;
+    
 
     //Create Phi(k+1) with kron(phi',I_lu)        
     Phi = Eigen::kroneckerProduct(phi.transpose(), eye_lu);
+    }
 
     //compute control input
-    uOut = Phi*theta;
-
+    if (kk >= k_0)
+    {
+        uOut = Phi*theta;
+    }
+    else
+    {
+        uOut = Eigen::VectorXd::Zero(lu);
+    }
+    
     //Increment kk
     kk++;
 }
@@ -122,7 +148,7 @@ void RCAC::coeffUpdate(
     P = (1/lambda)*P-(1/lambda)*P*PhifBar[0].transpose()*Gamma.inverse()
         *PhifBar[0]*P;
     theta = theta - P*PhifBar[0].transpose()*Gamma.inverse()
-            *(PhifBar[0].transpose()*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]));
+            *(PhifBar[0]*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]));
 }
 
 void RCAC::computeFiltered()
@@ -131,18 +157,20 @@ void RCAC::computeFiltered()
     Eigen::MatrixXd ufSum = Eigen::MatrixXd::Zero(lz, 1);
     Eigen::MatrixXd PhifSum = Eigen::MatrixXd::Zero(lz, Nc*lu*(lu+ly));
 
+     
+
     //Filter the numerator coefficients
-    for (int i = 0; i < FILT.filtNu.cols(); i++)
+    for (int i = 0; i < FILT.filtNu.cols()/lu; i++)
     {
-        ufSum = FILT.filtNu[i]*uBar[i] + ufSum;
-        PhifSum = FILT.filtNu[i]*PhiBar[i] + PhifSum;
+        ufSum = FILT.filtNu.block(0, lu*i, lz, lu)*uBar[i] + ufSum;
+        PhifSum = FILT.filtNu.block(0, lu*i, lz, lu)*PhiBar[i] + PhifSum;
     }
 
     //Filter the Denominator coefficients coefficients
-    for (int i = 0; i < FILT.filtDu.cols(); i++)
+    for (int i = 0; i < FILT.filtDu.cols()/lz; i++)
     {
-        ufSum = FILT.filtDu[i]*ufBar[i] + ufSum;
-        PhifSum = FILT.filtDu[i]*PhifBar[i] + PhifSum;
+        ufSum = ufSum - FILT.filtDu.block(0, lz*i, lz, lz)*ufBar[i];
+        PhifSum = PhifSum - FILT.filtDu.block(0, lz*i, lz, lz)*PhifBar[i];
     }
 
     //Add the sum to the list of past filtered values for future filtering
@@ -151,7 +179,6 @@ void RCAC::computeFiltered()
     //remove the oldest filtered value
     ufBar.pop_back();
     PhifBar.pop_back();
-
 }
 
 void RCAC::initFiltered()
@@ -169,27 +196,27 @@ void RCAC::initFiltered()
     Eigen::MatrixXd PhifBarTemp = Eigen::MatrixXd::Zero(lz, ltheta);
 
     //Set elements of Ubar and PhiBar to 0
-    for (int i = 1 ; FILT.filtNu.cols()/lu; i++)
+    for (int i = 1 ; i <= FILT.filtNu.cols()/lu; i++)
     {
         uBar.push_front(uBarTemp);
         PhiBar.push_front(PhiBarTemp);
     }
 
     //Set elements of Ufbar and PhifBar to 0
-    for (int i = 1 ; FILT.filtDu.cols()/lu; i++)
+    for (int i = 1 ; i <= FILT.filtDu.cols()/lz; i++)
     {
         ufBar.push_front(ufBarTemp);
         PhifBar.push_front(PhifBarTemp);
     }
 
     //Set elements of zbar to 0
-    for (int i = 1 ; FILT.filtNz.cols()/lz; i++)
+    for (int i = 1 ; i <= FILT.filtNz.cols()/lz; i++)
     {
         zBar.push_front(zBarTemp);
     }
 
     //Set elements of zfbar to 0
-    for (int i = 1 ; FILT.filtDz.cols()/lz; i++)
+    for (int i = 1 ; i <= FILT.filtDz.cols()/lz; i++)
     {
         zfBar.push_front(zBarTemp);
     }
