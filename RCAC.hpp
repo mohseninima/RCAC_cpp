@@ -18,7 +18,7 @@ struct rcacRLSFlags
     int ly;
     int lu;
     int Nc;
-    Eigen::MatrixXd Rtheta;
+    Eigen::MatrixXd P0;
     Eigen::MatrixXd Ru;
     Eigen::MatrixXd Rz;
     int k_0;
@@ -102,7 +102,7 @@ class RCAC
 
         //RLS FLAGS
         Eigen::VectorXd theta_0;
-        Eigen::MatrixXd Rtheta;
+        Eigen::MatrixXd P0;
         Eigen::MatrixXd Ru;
         Eigen::MatrixXd Rz;
 

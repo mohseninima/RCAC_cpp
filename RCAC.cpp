@@ -23,8 +23,7 @@ void RCAC::initRLS(
     k_0 = FLAGS.k_0;
     lambda = FLAGS.lambda;
     theta_0 = FLAGS.theta_0;
-    Rtheta = FLAGS.Rtheta;
-    P = Rtheta.inverse();
+    P0 = FLAGS.P0;
     Ru = FLAGS.Ru;
     Rz = FLAGS.Rz;
     this->FILT = FILT;
@@ -35,7 +34,7 @@ void RCAC::initRLS(
     //Initialized Filtered Variables
     initFiltered();
 
-    kk = 0;
+    kk = 1;
 
     //Tell that RLS RCAC is being used
     rcacRLS = true;
@@ -63,15 +62,17 @@ void RCAC::initGrad(
 */
 
 void RCAC::oneStep(
-    Eigen::VectorXd &uIn,
+    Eigen::VectorXd &uIn_,
     Eigen::VectorXd &zIn,
     Eigen::VectorXd &yIn
 )
 {
+    uIn = uIn_;
+
     //Compute Phi and phi before filtering only on the first step
     Eigen::VectorXd phi(uphi.rows()+yphi.rows(),1);
     Eigen::MatrixXd eye_lu =  Eigen::MatrixXd::Identity(lu,lu);
-    if (kk == 0)
+    if (kk == 1)
     {
         //Create phi with Nc past u and y measurements        
         phi << uphi, yphi;
@@ -81,6 +82,9 @@ void RCAC::oneStep(
 
         //Initialize theta
         theta = theta_0;
+
+        //Initialize P
+        P = P0;
     }
 
     //Add Phi and u to the list of past Phis and us for filtering
@@ -114,13 +118,12 @@ void RCAC::oneStep(
 
     //update Phi only if there is enough data
     //Create phi with Nc past u and y measurements. Now containing current values 
-    if (kk >= Nc)
+    if (kk > Nc)
     { 
         phi << uphi, yphi;
     
-
-    //Create Phi(k+1) with kron(phi',I_lu)        
-    Phi = Eigen::kroneckerProduct(phi.transpose(), eye_lu);
+        //Create Phi(k+1) with kron(phi',I_lu)        
+        Phi = Eigen::kroneckerProduct(phi.transpose(), eye_lu);
     }
 
     //compute control input
@@ -145,10 +148,11 @@ void RCAC::coeffUpdate(
     Eigen::MatrixXd Gamma;
 
     Gamma = lambda*Rsum.inverse() + PhifBar[0]*P*PhifBar[0].transpose();
-    P = (1/lambda)*P-(1/lambda)*P*PhifBar[0].transpose()*Gamma.inverse()
-        *PhifBar[0]*P;
     theta = theta - P*PhifBar[0].transpose()*Gamma.inverse()
             *(PhifBar[0]*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]));
+    P = (1/lambda)*P-(1/lambda)*P*PhifBar[0].transpose()*Gamma.inverse()
+        *PhifBar[0]*P;
+    //std::cout << "kk: " << kk << ", " << theta.transpose() << "\n";
 }
 
 void RCAC::computeFiltered()
@@ -156,8 +160,6 @@ void RCAC::computeFiltered()
     //Loop through and filter the coefficients
     Eigen::MatrixXd ufSum = Eigen::MatrixXd::Zero(lz, 1);
     Eigen::MatrixXd PhifSum = Eigen::MatrixXd::Zero(lz, Nc*lu*(lu+ly));
-
-     
 
     //Filter the numerator coefficients
     for (int i = 0; i < FILT.filtNu.cols()/lu; i++)
