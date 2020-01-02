@@ -8,23 +8,8 @@
 
 //Name: Nima Mohseni
 //Date: 12/29/2019
-//Purpose: This file contains the implementation of RCAC for both RLS and gradient
-//implementations in the form of a portable library
-
-struct rcacRLSFlags
-{
-    //RCAC Flags
-    int lz;
-    int ly;
-    int lu;
-    int Nc;
-    Eigen::MatrixXd P0;
-    Eigen::MatrixXd Ru;
-    Eigen::MatrixXd Rz;
-    int k_0;
-    int lambda;
-    Eigen::VectorXd theta_0;    
-};
+//Purpose: This file contains the general implementation of RCAC to support
+//derived RCAC classes for RLS, gradient and other RCAC types
 
 /*
 struct rcacGradFlags
@@ -35,6 +20,17 @@ struct rcacGradFlags
     Eigen::VectorXd theta_0;    
 };
 */
+
+struct rcacFlags
+{
+    //Basic RCAC Flags
+    int lz;
+    int ly;
+    int lu;
+    int Nc;
+    int k_0;
+    Eigen::VectorXd theta_0;    
+};
 
 struct rcacFilt
 {
@@ -47,10 +43,10 @@ struct rcacFilt
 class RCAC
 {
     public:
-        //Function initRLS: Initializes RCAC using RLS with the given flags and
+        //Function initRLS: Initializes RCAC with the given flags and
         //filter values
-        void initRLS(
-            rcacRLSFlags &FLAGS,
+        void init(
+            rcacFlags &FLAGS,
             rcacFilt &FILT
         );
 
@@ -76,11 +72,11 @@ class RCAC
             return uOut;
         };
 
-    private:
+    protected:
         //Function coeffUpdate: Compute the RCAC coefficient update
-        void coeffUpdate(
+        virtual void coeffUpdate(
             Eigen::VectorXd &zIn
-        );
+        ) = 0;
 
         //Function initRegressor: initialize the regressor variables
         void initRegressor();
@@ -98,13 +94,7 @@ class RCAC
         int lu;
         int Nc;
         int k_0;
-        int lambda;
-
-        //RLS FLAGS
         Eigen::VectorXd theta_0;
-        Eigen::MatrixXd P0;
-        Eigen::MatrixXd Ru;
-        Eigen::MatrixXd Rz;
 
 
         //rcacGradFlags gradFLAGS;

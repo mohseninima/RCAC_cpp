@@ -6,38 +6,16 @@
 
 //Name: Nima Mohseni
 //Date: 12/29/2019
-//Purpose: This file contains the implementation of RCAC for both RLS and gradient
-//implementations in the form of a portable library
+//Purpose: This file contains the general implementation of RCAC to support
+//derived RCAC classes for RLS, gradient and other RCAC types
 
-void RCAC::initRLS(
-    rcacRLSFlags &FLAGS,
+void RCAC::init(
+    rcacFlags &FLAGS,
     rcacFilt &FILT
 )
 {
-    //Assign FLAGS and FILT variables to the specific RCAC object
-    //this->FLAGS = FLAGS;
-    lz = FLAGS.lz;
-    ly = FLAGS.ly;
-    lu = FLAGS.lu;
-    Nc = FLAGS.Nc;
-    k_0 = FLAGS.k_0;
-    lambda = FLAGS.lambda;
-    theta_0 = FLAGS.theta_0;
-    P0 = FLAGS.P0;
-    Ru = FLAGS.Ru;
-    Rz = FLAGS.Rz;
-    this->FILT = FILT;
-
-    //Initialize the regressor variables
-    initRegressor();
-
-    //Initialized Filtered Variables
-    initFiltered();
-
-    kk = 1;
-
-    //Tell that RLS RCAC is being used
-    rcacRLS = true;
+    std::cout << "Empty Initialization!" << "\n";
+    exit(EXIT_FAILURE);
 }
 
 /*
@@ -83,8 +61,6 @@ void RCAC::oneStep(
         //Initialize theta
         theta = theta_0;
 
-        //Initialize P
-        P = P0;
     }
 
     //Add Phi and u to the list of past Phis and us for filtering
@@ -138,21 +114,6 @@ void RCAC::oneStep(
     
     //Increment kk
     kk++;
-}
-
-void RCAC::coeffUpdate(
-    Eigen::VectorXd &zIn
-)
-{
-    Eigen::MatrixXd Rsum = Rz + Ru;
-    Eigen::MatrixXd Gamma;
-
-    Gamma = lambda*Rsum.inverse() + PhifBar[0]*P*PhifBar[0].transpose();
-    theta = theta - P*PhifBar[0].transpose()*Gamma.inverse()
-            *(PhifBar[0]*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]));
-    P = (1/lambda)*P-(1/lambda)*P*PhifBar[0].transpose()*Gamma.inverse()
-        *PhifBar[0]*P;
-    //std::cout << "kk: " << kk << ", " << theta.transpose() << "\n";
 }
 
 void RCAC::computeFiltered()
