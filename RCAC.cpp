@@ -9,6 +9,26 @@
 //Purpose: This file contains the general implementation of RCAC to support
 //derived RCAC classes for RLS, gradient and other RCAC types
 
+/*
+RCAC* RCAC::init(
+    rcacRlsFlags &FLAGS, 
+    rcacFilt &FILT, 
+    int &whichRCAC
+)
+{
+    if (whichRCAC == 1)
+    {
+        return new RCACRLS(FLAGS, FILT);
+    }
+    else
+    {
+        return NULL;
+    }
+    
+}
+*/
+
+/*
 void RCAC::init(
     rcacFlags &FLAGS,
     rcacFilt &FILT
@@ -17,6 +37,7 @@ void RCAC::init(
     std::cout << "Empty Initialization!" << "\n";
     exit(EXIT_FAILURE);
 }
+*/
 
 /*
 void RCAC::initGrad(

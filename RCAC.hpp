@@ -5,6 +5,7 @@
 #include "Eigen/Sparse"
 #include "unsupported/Eigen/KroneckerProduct"
 #include <deque>
+#include <string>
 
 //Name: Nima Mohseni
 //Date: 12/29/2019
@@ -43,12 +44,22 @@ struct rcacFilt
 class RCAC
 {
     public:
+        //Factory method for initializing RCAC types
+        template <typename T>
+        static RCAC* init(
+            T &FLAGS,
+            rcacFilt &FILT,
+            std::string &whichRCAC
+        );
+
+        /*
         //Function initRLS: Initializes RCAC with the given flags and
         //filter values
         void init(
             rcacFlags &FLAGS,
             rcacFilt &FILT
         );
+        */
 
         /*
         //Function initGrad: Initializes RCAC using gradient descent with the 
