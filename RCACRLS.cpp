@@ -47,7 +47,7 @@ void RCACRLS::coeffUpdate(
     Eigen::VectorXd &zIn
 )
 {
-    Eigen::MatrixXd Rsum = Rz + Ru;
+    Eigen::MatrixXd Rsum = Rz;
     Eigen::MatrixXd Gamma;
 
     Gamma = lambda*Rsum.inverse() + PhifBar[0]*P*PhifBar[0].transpose();
