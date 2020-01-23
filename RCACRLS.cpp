@@ -49,11 +49,13 @@ void RCACRLS::coeffUpdate(
 {
     Eigen::MatrixXd Rsum = Rz;
     Eigen::MatrixXd Gamma;
+    Eigen::MatrixXd GammaInv;
 
     Gamma = lambda*Rsum.inverse() + PhifBar[0]*P*PhifBar[0].transpose();
-    theta = theta - P*PhifBar[0].transpose()*Gamma.inverse()
-            *(PhifBar[0]*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]));
-    P = (1/lambda)*P-(1/lambda)*P*PhifBar[0].transpose()*Gamma.inverse()
-        *PhifBar[0]*P;
+    GammaInv = Gamma.inverse();
+    theta = theta - P*(PhifBar[0].transpose()*(GammaInv
+            *(PhifBar[0]*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]))));
+    P = (1/lambda)*P-(1/lambda)*(P*PhifBar[0].transpose())*GammaInv
+        *(PhifBar[0]*P);
     //std::cout << "kk: " << kk << ", " << theta.transpose() << "\n";
 }
