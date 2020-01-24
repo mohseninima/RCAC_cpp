@@ -144,14 +144,15 @@ void RCAC::computeFiltered()
     Eigen::MatrixXd PhifSum = Eigen::MatrixXd::Zero(lz, Nc*lu*(lu+ly));
 
     //Filter the numerator coefficients
-    for (int i = 0; i < FILT.filtNu.cols()/lu; i++)
+    //for (int i = 0; i < FILT.filtNu.cols()/lu; i++)
+    for (int i = 0; i < filtorder; i++)
     {
         ufSum = FILT.filtNu.block(0, lu*i, lz, lu)*uBar[i] + ufSum;
         PhifSum = FILT.filtNu.block(0, lu*i, lz, lu)*PhiBar[i] + PhifSum;
     }
 
     //Filter the Denominator coefficients coefficients
-    for (int i = 0; i < FILT.filtDu.cols()/lz; i++)
+    for (int i = 0; i < (filtorder-1); i++)
     {
         ufSum = ufSum - FILT.filtDu.block(0, lz*i, lz, lz)*ufBar[i];
         PhifSum = PhifSum - FILT.filtDu.block(0, lz*i, lz, lz)*PhifBar[i];

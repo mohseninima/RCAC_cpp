@@ -21,8 +21,9 @@ RCACRLS::RCACRLS(
     lu = FLAGS.lu;
     Nc = FLAGS.Nc;
     k_0 = FLAGS.k_0;
-    lambda = FLAGS.lambda;
     theta_0 = FLAGS.theta_0;
+    filtorder = FLAGS.filtorder;
+    lambda = FLAGS.lambda;
     P0 = FLAGS.P0;
     Ru = FLAGS.Ru;
     Rz = FLAGS.Rz;

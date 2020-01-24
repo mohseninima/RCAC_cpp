@@ -21,7 +21,8 @@ struct rcacRlsFlags
     int lu;
     int Nc;
     int lambda;
-    Eigen::VectorXd theta_0; 
+    Eigen::VectorXd theta_0;
+    int filtorder;
     int k_0;
 
     //RLS RCAC Flags

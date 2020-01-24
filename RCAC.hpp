@@ -30,7 +30,8 @@ struct rcacFlags
     int lu;
     int Nc;
     int k_0;
-    Eigen::VectorXd theta_0;    
+    Eigen::VectorXd theta_0;
+    int filtorder;    
 };
 
 struct rcacFilt
@@ -106,6 +107,7 @@ class RCAC
         int Nc;
         int k_0;
         Eigen::VectorXd theta_0;
+        int filtorder;
 
 
         //rcacGradFlags gradFLAGS;
