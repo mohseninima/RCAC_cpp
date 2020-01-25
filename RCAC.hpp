@@ -84,6 +84,36 @@ class RCAC
             return uOut;
         };
 
+        //Function getCoeff: Get the RCAC coefficients
+        Eigen::VectorXd getCoeff()
+        {
+            return theta;
+        };
+
+        //Function getlu: Get the number of control inputs
+        int getlu()
+        {
+            return lu;
+        };
+
+        //Function getly: Get the number of measurements
+        int getly()
+        {
+            return ly;
+        };
+
+        //Function getlz: Get the number of performance measurements
+        int getlz()
+        {
+            return lz;
+        };        
+
+        //Function getNc: Get the controller order
+        int getNc()
+        {
+            return Nc;
+        };        
+
     protected:
         //Function coeffUpdate: Compute the RCAC coefficient update
         virtual void coeffUpdate(
