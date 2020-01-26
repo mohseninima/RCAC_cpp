@@ -58,5 +58,6 @@ void RCACRLS::coeffUpdate(
             *(PhifBar[0]*theta + Rsum.inverse()*Rz*(zIn - ufBar[0]))));
     P = (1/lambda)*P-(1/lambda)*(P*PhifBar[0].transpose())*GammaInv
         *(PhifBar[0]*P);
+     
     //std::cout << "kk: " << kk << ", " << theta.transpose() << "\n";
 }

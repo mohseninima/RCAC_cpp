@@ -132,7 +132,7 @@ void RCAC::oneStep(
     {
         uOut = Eigen::VectorXd::Zero(lu);
     }
-    
+
     //Increment kk
     kk++;
 }

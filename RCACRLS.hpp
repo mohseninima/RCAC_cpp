@@ -20,7 +20,7 @@ struct rcacRlsFlags
     int ly;
     int lu;
     int Nc;
-    int lambda;
+    double lambda;
     Eigen::VectorXd theta_0;
     int filtorder;
     int k_0;
@@ -48,7 +48,7 @@ class RCACRLS: public RCAC
         );
 
         //RLS FLAGS
-        int lambda;
+        double lambda;
         Eigen::MatrixXd P0;
         Eigen::MatrixXd Ru;
         Eigen::MatrixXd Rz;

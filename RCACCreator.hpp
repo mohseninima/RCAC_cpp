@@ -39,6 +39,10 @@ RCAC* RCAC::init(
 //Function initSimulink, takes the array format of the RCAC variables from 
 //simulink and converts it to the struct format and returns a pointer to an RCAC
 //object
+//
+//ITEGRATE ME:
+//std::string msg = std::string("Aw snap: ");       
+//mexErrMsgTxt(msg.c_str());
 RCAC* initSimulink(
     double* &FLAGSmx,
     double* &FILTmx,
@@ -65,21 +69,21 @@ RCAC* initSimulink(
         //load P0
         int ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly);
         FLAGS.P0.resize(ltheta, ltheta); //Tell eigen the matrix size
-        for (int i = 0; i < ltheta^2; i++)
-        {
+        for (int i = 0; i < pow(ltheta,2); i++)
+        {           
             FLAGS.P0 << FLAGSmx[flagsIndex]; flagsIndex++;
-        }
+        } 
 
         //load Ru
         FLAGS.Ru.resize(FLAGS.lu, FLAGS.lu); //Tell eigen the matrix size
-        for (int i = 0; i < FLAGS.lu^2; i++)
+        for (int i = 0; i < pow(FLAGS.lu,2); i++)
         {
             FLAGS.Ru << FLAGSmx[flagsIndex]; flagsIndex++;
         }
 
         //load Rz
         FLAGS.Rz.resize(FLAGS.lz, FLAGS.lz); //Tell eigen the matrix size
-        for (int i = 0; i < FLAGS.lz^2; i++)
+        for (int i = 0; i < pow(FLAGS.lz,2); i++)
         {
             FLAGS.Rz << FLAGSmx[flagsIndex]; flagsIndex++;
         }
@@ -88,12 +92,11 @@ RCAC* initSimulink(
         FLAGS.lambda = FLAGSmx[flagsIndex]; flagsIndex++;
       
         //load theta_0
-        FLAGS.theta_0.resize(FLAGS.lu); //Tell eigen the matrix size
+        FLAGS.theta_0.resize(ltheta); //Tell eigen the matrix size
         for (int i = 0; i < ltheta; i++)
         {
-            FLAGS.Rz << FLAGSmx[flagsIndex]; flagsIndex++;
+            FLAGS.theta_0 << FLAGSmx[flagsIndex]; flagsIndex++;
         }
-
 
         //load FILTmx into FILT struct
         //mxArray must be in format
@@ -109,14 +112,14 @@ RCAC* initSimulink(
         {
             FILT.filtNu << FILTmx[filtIndex]; filtIndex++;
         }
-
+      
         //load Gf Denominator
-        FILT.filtNu.resize(FLAGS.lz, FLAGS.lz*(FLAGS.filtorder-1)); //Tell eigen the matrix size
+        FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*(FLAGS.filtorder-1)); //Tell eigen the matrix size
         for (int i = 0; i < (FLAGS.lz*FLAGS.lz*(FLAGS.filtorder-1)); i++)
         {
             FILT.filtDu << FILTmx[filtIndex]; filtIndex++;
         }
-
+       
         //load Gf_z Numerator (never used?)
         FILT.filtNz.resize(FLAGS.lz, FLAGS.lz); //Tell eigen the matrix size
         for (int i = 0; i < (FLAGS.lz*FLAGS.lz); i++)
@@ -130,14 +133,15 @@ RCAC* initSimulink(
         {
             FILT.filtDz << FILTmx[filtIndex]; filtIndex++;
         }       
-
+  
         //create RCACRLS
         return new RCACRLS(FLAGS, FILT);
     }
     else
     {
         std::cout << "Bad RCAC Type (Simulink)!" << "\n";
-        exit(EXIT_FAILURE);
+        //throw(EXIT_FAILURE);
+        throw "Bad RCAC Type (Simulink)!";
     } 
 }
 

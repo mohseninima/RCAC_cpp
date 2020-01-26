@@ -112,6 +112,12 @@ class RCAC
         int getNc()
         {
             return Nc;
+        };  
+        
+        //Function getkk: Get timestep
+        int getkk()
+        {
+            return kk;
         };        
 
     protected:
