@@ -108,8 +108,8 @@ Eigen::MatrixXd&#160;</td><td class="memItemRight" valign="bottom"><b>filtDz</b>
 <div class="textblock"><p>This struct contains the filter coefficients. This struct should not need to be overloaded unless a big change in the algorithm is needed i.e. all types of <a class="el" href="class_r_c_a_c.html">RCAC</a> will use this same struct.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">filtNu</td><td>Matrix containing the numerator coefficients of <img class="formulaInl" alt="$G_f$" src="form_0.png"/>. Should be dimension lz by lu*filtorder </td></tr>
-    <tr><td class="paramname">filtDu</td><td>Matrix containing the denominator coefficients of <img class="formulaInl" alt="$G_f$" src="form_0.png"/>. Dimension lz by lu*(filtorder-1) </td></tr>
+    <tr><td class="paramname">filtNu</td><td>Matrix containing the numerator coefficients of ( <img class="formulaInl" alt="$G_f$" src="form_0.png"/>). Should be dimension lz by lu*filtorder </td></tr>
+    <tr><td class="paramname">filtDu</td><td>Matrix containing the denominator coefficients of ( <img class="formulaInl" alt="$G_f$" src="form_0.png"/>). Dimension lz by lu*(filtorder-1) </td></tr>
     <tr><td class="paramname">filtNz</td><td>Matrix containing the numerator coefficients of a filter for the performance measurement. <b> Not currently used in any computations but is required! (set as identity matrix) </b>. Dimension lz by lz </td></tr>
     <tr><td class="paramname">filtDz</td><td>Matrix containing the denominator coefficients of a filter for the performance measurement. <b> Not currently used in any computations but is required! (set as zero matrix) </b>. Dimension lz by lz </td></tr>
   </table>

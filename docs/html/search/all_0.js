@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['init',['init',['../class_r_c_a_c.html#af7b7133b676886d5010be725291c1a1d',1,'RCAC']]]
+  ['coeffupdate',['coeffUpdate',['../class_r_c_a_c.html#a5ac60fc4b359cf5555427bd1652d6ca1',1,'RCAC']]],
+  ['computefiltered',['computeFiltered',['../class_r_c_a_c.html#a5e6bc7050ced3b1be7d9060d089dccfb',1,'RCAC']]]
 ];

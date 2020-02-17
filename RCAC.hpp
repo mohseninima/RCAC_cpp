@@ -68,7 +68,7 @@ struct rcacFilt
     Eigen::MatrixXd filtNu;
     Eigen::MatrixXd filtDu;
     Eigen::MatrixXd filtNz;
-    Eigen::MatrixXd filtDz;   
+    Eigen::MatrixXd filtDz;
 };
 
 /**
@@ -115,6 +115,13 @@ class RCAC
         );
         */
 
+       /**
+        * This function allows the user to compute one step of the RCAC update.
+        * 
+        * @param uIn previous control input
+        * @param zIn current performance measurement
+        * @param yIn current sensor measurement
+        */
         //Function oneStep: Compute one step of RCAC
         void oneStep(
             Eigen::VectorXd &uIn,
@@ -122,42 +129,63 @@ class RCAC
             Eigen::VectorXd &yIn
         );
 
+        /**
+         * Returns RCAC's computed value for the control. Must run oneStep at least once.
+         */
         //Function getControl: Get the computed control input
         Eigen::VectorXd getControl()
         {
             return uOut;
         };
 
+        /**
+         * Returns a vector of the current RCAC coefficients.
+         */
         //Function getCoeff: Get the RCAC coefficients
         Eigen::VectorXd getCoeff()
         {
             return theta;
         };
 
+        /**
+         * Returns the number of control inputs that RCAC is using.
+         */
         //Function getlu: Get the number of control inputs
         int getlu()
         {
             return lu;
         };
 
+        /**
+         * Returns the number of sensor measurements that RCAC is using.
+         */
         //Function getly: Get the number of measurements
         int getly()
         {
             return ly;
         };
 
+        /**
+         * Returns the number of performance measurements that RCAC is using.
+         */
         //Function getlz: Get the number of performance measurements
         int getlz()
         {
             return lz;
         };        
 
+        /**
+         * Returns the controller order of RCAC.
+         */
         //Function getNc: Get the controller order
         int getNc()
         {
             return Nc;
         };  
         
+        /**
+         * Returns the timestep of RCAC
+         */
         //Function getkk: Get timestep
         int getkk()
         {
@@ -165,17 +193,32 @@ class RCAC
         };        
 
     protected:
+        /**
+         * Abstract function for the ceofficient update implementation (e.g. RLS, Gradient).
+         * Child classes must implement this function for RCAC to work
+         * 
+         * @param zIn performance measurement
+         */
         //Function coeffUpdate: Compute the RCAC coefficient update
         virtual void coeffUpdate(
             Eigen::VectorXd &zIn
         ) = 0;
 
+        /**
+         * Initialize the regressor variables uphi and yphi to zero vectors
+         */
         //Function initRegressor: initialize the regressor variables
         void initRegressor();
 
+        /**
+         * Initialize the variables required for filtering to zero
+         */
         //Function initFiltered: initialize filtered variables
         void initFiltered();
 
+        /**
+         * Compute the filtered variables given current regressors and filter values
+         */
         //Function computeFiltered: compute the filtered variables
         void computeFiltered();
 
