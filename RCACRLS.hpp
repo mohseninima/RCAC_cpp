@@ -29,7 +29,7 @@ struct rcacRlsFlags
     Eigen::MatrixXd P0;
     Eigen::MatrixXd Ru;
     Eigen::MatrixXd Rz;  
-    };
+};
 
 class RCACRLS: public RCAC
 {

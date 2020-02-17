@@ -56,7 +56,7 @@ static void mdlInitializeSizes(SimStruct *S)
     //printf(preRcacType);
     //std::string rcacType(preRcacType);
     
-    int buflen = mxGetN((ssGetSFcnParam(S, 1)))*sizeof(mxChar)+1; 
+    int buflen = mxGetN((ssGetSFcnParam(S, 1)))*sizeof(mxChar)+1;
     char* String = (char*)mxMalloc(buflen); 
     int status = mxGetString((ssGetSFcnParam(S, 1)),String,buflen);
     //printf("the output is %s\n",String);
@@ -171,7 +171,9 @@ static void mdlInitializeSampleTimes(SimStruct *S)
         //Store the RCAC pointer in a work vector
         //ssSetPWorkValue(S, 0, myRCAC);
         //ssSetPWorkValue(S, 0, (void *)myRCAC);
+        //ssSetPWorkValue(S, 0, (void *)myRCAC);
         ssSetPWorkValue(S, 0, (void *)initSimulink(FLAGSmx, FILTmx, rcacType));
+        
         
         //set the first timestep to 1
         ssSetIWorkValue(S, 0, 1);
@@ -192,6 +194,8 @@ static void mdlOutputs(SimStruct *S, int tid)
     //read variables from work vector
     //int kk = ssGetIWorkValue(S, 0);
     myRCAC = (RCAC *)ssGetPWorkValue(S, 0);
+    //myRCAC = (RCAC *)ssGetPWorkValue(S, 1);
+    
     
 
     //prepare input signals, and convert them to eigen vectors
@@ -205,17 +209,21 @@ static void mdlOutputs(SimStruct *S, int tid)
     Eigen::VectorXd uIn_eigen = Eigen::Map<Eigen::VectorXd>(uin, myRCAC->getlu(), 1);
     //Eigen::Map<Eigen::VectorXd> uIn_eigen(uin, myRCAC->getlu, 1);
  
-    //prepare output signals, and convert eigen array to C array
+    //prepare output signals
     uout = (double *) ssGetOutputPortRealSignal(S, 0);
     thetaout = (double *) ssGetOutputPortRealSignal(S, 1);
     
-    //Call RCAC and return the outputs (convert Eigen array to C array)
+    //Call RCAC and return the outputs (then convert Eigen array to C array)
     myRCAC->oneStep(uIn_eigen, zIn_eigen, yIn_eigen);
 
-    uout = myRCAC->getControl().data();
-    thetaout = myRCAC->getCoeff().data();
+    //uout = myRCAC->getControl().data();
+    //thetaout = myRCAC->getCoeff().data();
     
-  
+    Eigen::Map<Eigen::VectorXd>(uout, myRCAC->getlu(), 1) = myRCAC->getControl();
+    Eigen::Map<Eigen::VectorXd>(thetaout, myRCAC->getNc()*myRCAC->getlu()*(myRCAC->getlu()+myRCAC->getly()), 1) = myRCAC->getCoeff();
+    
+    //mexPrintf("%f\n",zin[0]);
+    //mexPrintf("%f\n",uout[0]);
     //for (int test = 0; test < 6; test++)
     //    mexPrintf("%f\n",zIn_eigen[test]);
     //mexPrintf("%i\n",myRCAC->getkk());
@@ -228,7 +236,7 @@ static void mdlTerminate(SimStruct *S)
     
     RCAC *myRCAC;
     myRCAC = (RCAC *)ssGetPWorkValue(S, 0);
-    delete myRCAC;
+    //delete myRCAC;
 }
 
 //Required at end of S-Function

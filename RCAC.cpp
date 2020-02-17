@@ -84,7 +84,7 @@ void RCAC::oneStep(
 
     }
 
-    //Add Phi and u to the list of past Phis and us for filtering
+    //Add Phi and u to the list of past Phi's and u's for filtering
     uBar.push_front(uIn);
     PhiBar.push_front(Phi);
     //remove the oldest Phi
