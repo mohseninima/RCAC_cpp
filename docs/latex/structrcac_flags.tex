@@ -1,0 +1,57 @@
+\hypertarget{structrcac_flags}{}\section{rcac\+Flags Struct Reference}
+\label{structrcac_flags}\index{rcac\+Flags@{rcac\+Flags}}
+
+
+{\ttfamily \#include $<$R\+C\+A\+C.\+hpp$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structrcac_flags_aa13376ab5ff7508135b7e295891158a1}\label{structrcac_flags_aa13376ab5ff7508135b7e295891158a1}} 
+int {\bfseries lz}
+\item 
+\mbox{\Hypertarget{structrcac_flags_ad908c320c7ef724ff90df2f1adc21b5c}\label{structrcac_flags_ad908c320c7ef724ff90df2f1adc21b5c}} 
+int {\bfseries ly}
+\item 
+\mbox{\Hypertarget{structrcac_flags_a737b88634899c9b8f5137194f55ef6f8}\label{structrcac_flags_a737b88634899c9b8f5137194f55ef6f8}} 
+int {\bfseries lu}
+\item 
+\mbox{\Hypertarget{structrcac_flags_a19895c9f3b5d9a65cdf772f91b07dd33}\label{structrcac_flags_a19895c9f3b5d9a65cdf772f91b07dd33}} 
+int {\bfseries Nc}
+\item 
+\mbox{\Hypertarget{structrcac_flags_acde6690db2f46f4ba681d399b2b4a626}\label{structrcac_flags_acde6690db2f46f4ba681d399b2b4a626}} 
+int {\bfseries k\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_flags_a13fda3b700177ef88394b2c613d60539}\label{structrcac_flags_a13fda3b700177ef88394b2c613d60539}} 
+Eigen\+::\+Vector\+Xd {\bfseries theta\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_flags_aacd0b78521ecb3e2befe6b7597ba81a2}\label{structrcac_flags_aacd0b78521ecb3e2befe6b7597ba81a2}} 
+int {\bfseries filtorder}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This struct contains the basic parameters needed for the \hyperlink{class_r_c_a_c}{R\+C\+AC} filtering to work.
+
+This should be used as a starting point for defining your own Flag structs for different \hyperlink{class_r_c_a_c}{R\+C\+AC} types.
+
+
+\begin{DoxyParams}{Parameters}
+{\em lz} & Number of performance measurements \\
+\hline
+{\em ly} & Number of sensor measurements \\
+\hline
+{\em lu} & Number of control inputs \\
+\hline
+{\em Nc} & Controller order \\
+\hline
+{\em theta\+\_\+0} & Eigen vector with initial controller coefficients. Usually a vector of zeros \\
+\hline
+{\em filtorder} & Order of the filter ( $G_f$) \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+R\+C\+A\+C.\+hpp\end{DoxyCompactItemize}

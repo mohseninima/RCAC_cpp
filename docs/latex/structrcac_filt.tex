@@ -1,0 +1,42 @@
+\hypertarget{structrcac_filt}{}\section{rcac\+Filt Struct Reference}
+\label{structrcac_filt}\index{rcac\+Filt@{rcac\+Filt}}
+
+
+{\ttfamily \#include $<$R\+C\+A\+C.\+hpp$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structrcac_filt_a7913d3fad1c5e4db99a4e78759b9f976}\label{structrcac_filt_a7913d3fad1c5e4db99a4e78759b9f976}} 
+Eigen\+::\+Matrix\+Xd {\bfseries filt\+Nu}
+\item 
+\mbox{\Hypertarget{structrcac_filt_aa4544009d76b82a72bdc2da8461d4a12}\label{structrcac_filt_aa4544009d76b82a72bdc2da8461d4a12}} 
+Eigen\+::\+Matrix\+Xd {\bfseries filt\+Du}
+\item 
+\mbox{\Hypertarget{structrcac_filt_aa97a5b5579de2bd5053868563dc11a35}\label{structrcac_filt_aa97a5b5579de2bd5053868563dc11a35}} 
+Eigen\+::\+Matrix\+Xd {\bfseries filt\+Nz}
+\item 
+\mbox{\Hypertarget{structrcac_filt_ae63127744aadad01497f7717152ed125}\label{structrcac_filt_ae63127744aadad01497f7717152ed125}} 
+Eigen\+::\+Matrix\+Xd {\bfseries filt\+Dz}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This struct contains the filter coefficients. This struct should not need to be overloaded unless a big change in the algorithm is needed i.\+e. all types of \hyperlink{class_r_c_a_c}{R\+C\+AC} will use this same struct.
+
+
+\begin{DoxyParams}{Parameters}
+{\em filt\+Nu} & Matrix containing the numerator coefficients of $G_f$. Should be dimension lz by lu$\ast$filtorder \\
+\hline
+{\em filt\+Du} & Matrix containing the denominator coefficients of $G_f$. Dimension lz by lu$\ast$(filtorder-\/1) \\
+\hline
+{\em filt\+Nz} & Matrix containing the numerator coefficients of a filter for the performance measurement. {\bfseries  Not currently used in any computations but is required! (set as identity matrix) }. Dimension lz by lz \\
+\hline
+{\em filt\+Dz} & Matrix containing the denominator coefficients of a filter for the performance measurement. {\bfseries  Not currently used in any computations but is required! (set as zero matrix) }. Dimension lz by lz \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+R\+C\+A\+C.\+hpp\end{DoxyCompactItemize}

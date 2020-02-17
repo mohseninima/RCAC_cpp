@@ -1,0 +1,179 @@
+\hypertarget{class_r_c_a_c}{}\section{R\+C\+AC Class Reference}
+\label{class_r_c_a_c}\index{R\+C\+AC@{R\+C\+AC}}
+
+
+{\ttfamily \#include $<$R\+C\+A\+C.\+hpp$>$}
+
+
+
+Inheritance diagram for R\+C\+AC\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=145pt]{class_r_c_a_c__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for R\+C\+AC\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=129pt]{class_r_c_a_c__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}\label{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}} 
+void {\bfseries one\+Step} (Eigen\+::\+Vector\+Xd \&u\+In, Eigen\+::\+Vector\+Xd \&z\+In, Eigen\+::\+Vector\+Xd \&y\+In)
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}\label{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}} 
+Eigen\+::\+Vector\+Xd {\bfseries get\+Control} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a5223fc3dbd1a3b4b1577dfd83af76f7e}\label{class_r_c_a_c_a5223fc3dbd1a3b4b1577dfd83af76f7e}} 
+Eigen\+::\+Vector\+Xd {\bfseries get\+Coeff} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_ae854b722c35cb1d8506ddacf6a89f795}\label{class_r_c_a_c_ae854b722c35cb1d8506ddacf6a89f795}} 
+int {\bfseries getlu} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a1066229fd21de368018ae43747f34622}\label{class_r_c_a_c_a1066229fd21de368018ae43747f34622}} 
+int {\bfseries getly} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a80a0a753247f22bea53bc5c0b76403a1}\label{class_r_c_a_c_a80a0a753247f22bea53bc5c0b76403a1}} 
+int {\bfseries getlz} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a5e3d7aedab3b39415315f1c6b1920ef0}\label{class_r_c_a_c_a5e3d7aedab3b39415315f1c6b1920ef0}} 
+int {\bfseries get\+Nc} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a4e710eaf32fac967dc76a8d851a51211}\label{class_r_c_a_c_a4e710eaf32fac967dc76a8d851a51211}} 
+int {\bfseries getkk} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T $>$ }\\static \hyperlink{class_r_c_a_c}{R\+C\+AC} $\ast$ \hyperlink{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}{init} (T \&F\+L\+A\+GS, \hyperlink{structrcac_filt}{rcac\+Filt} \&F\+I\+LT, std\+::string \&which\+R\+C\+AC)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a5ac60fc4b359cf5555427bd1652d6ca1}\label{class_r_c_a_c_a5ac60fc4b359cf5555427bd1652d6ca1}} 
+virtual void {\bfseries coeff\+Update} (Eigen\+::\+Vector\+Xd \&z\+In)=0
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a8dd38159eccbe85cbee4118020c90c88}\label{class_r_c_a_c_a8dd38159eccbe85cbee4118020c90c88}} 
+void {\bfseries init\+Regressor} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_aac17e469acf0f2457941d18ae02bfe07}\label{class_r_c_a_c_aac17e469acf0f2457941d18ae02bfe07}} 
+void {\bfseries init\+Filtered} ()
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a5e6bc7050ced3b1be7d9060d089dccfb}\label{class_r_c_a_c_a5e6bc7050ced3b1be7d9060d089dccfb}} 
+void {\bfseries compute\+Filtered} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a92ae57de3b80c8249ee3a328592f3d06}\label{class_r_c_a_c_a92ae57de3b80c8249ee3a328592f3d06}} 
+int {\bfseries lz}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_aee0473f7ce8fa6a82bb5adddc48577fc}\label{class_r_c_a_c_aee0473f7ce8fa6a82bb5adddc48577fc}} 
+int {\bfseries ly}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a6683eb31916f2ee9cbcf1d36d0f382e6}\label{class_r_c_a_c_a6683eb31916f2ee9cbcf1d36d0f382e6}} 
+int {\bfseries lu}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_ac5e3bbd73052a1a888db85ad89b40d2a}\label{class_r_c_a_c_ac5e3bbd73052a1a888db85ad89b40d2a}} 
+int {\bfseries Nc}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_af63e5f8e3fd6ab9a896c5b07d572fe5e}\label{class_r_c_a_c_af63e5f8e3fd6ab9a896c5b07d572fe5e}} 
+int {\bfseries k\+\_\+0}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_aff47c54eac89ed52c2bdd836376d7eed}\label{class_r_c_a_c_aff47c54eac89ed52c2bdd836376d7eed}} 
+Eigen\+::\+Vector\+Xd {\bfseries theta\+\_\+0}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a71d835fb0f8e32eab92832bf3a966155}\label{class_r_c_a_c_a71d835fb0f8e32eab92832bf3a966155}} 
+int {\bfseries filtorder}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a02f30c9c5a9af4d84de16e1e027489f4}\label{class_r_c_a_c_a02f30c9c5a9af4d84de16e1e027489f4}} 
+\hyperlink{structrcac_filt}{rcac\+Filt} {\bfseries F\+I\+LT}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_ab087087d4dad63a40fbd7ead4b850c8c}\label{class_r_c_a_c_ab087087d4dad63a40fbd7ead4b850c8c}} 
+std\+::deque$<$ Eigen\+::\+Vector\+Xd $>$ {\bfseries u\+Bar}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a6eb81be8397d5605773db459d912f90d}\label{class_r_c_a_c_a6eb81be8397d5605773db459d912f90d}} 
+std\+::deque$<$ Eigen\+::\+Vector\+Xd $>$ {\bfseries uf\+Bar}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a06799c662a4c8203f642e17f8c86d33b}\label{class_r_c_a_c_a06799c662a4c8203f642e17f8c86d33b}} 
+std\+::deque$<$ Eigen\+::\+Vector\+Xd $>$ {\bfseries z\+Bar}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a774f6216c9c24390701d09c4630dc95d}\label{class_r_c_a_c_a774f6216c9c24390701d09c4630dc95d}} 
+std\+::deque$<$ Eigen\+::\+Vector\+Xd $>$ {\bfseries zf\+Bar}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a083bb4d49144a9820f28f637c8ba6eb5}\label{class_r_c_a_c_a083bb4d49144a9820f28f637c8ba6eb5}} 
+std\+::deque$<$ Eigen\+::\+Matrix\+Xd $>$ {\bfseries Phi\+Bar}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_aa59f73c94933eeb7ade8f8d45533feb1}\label{class_r_c_a_c_aa59f73c94933eeb7ade8f8d45533feb1}} 
+std\+::deque$<$ Eigen\+::\+Matrix\+Xd $>$ {\bfseries Phif\+Bar}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_ad6bc8005d9983494ee607b697cd85ed7}\label{class_r_c_a_c_ad6bc8005d9983494ee607b697cd85ed7}} 
+Eigen\+::\+Matrix\+Xd {\bfseries P}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a06851b7327e7c9095da5e8525dc84889}\label{class_r_c_a_c_a06851b7327e7c9095da5e8525dc84889}} 
+Eigen\+::\+Vector\+Xd {\bfseries theta}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a7c1ba0823d931007e737fc77b9489543}\label{class_r_c_a_c_a7c1ba0823d931007e737fc77b9489543}} 
+Eigen\+::\+Vector\+Xd {\bfseries u\+Out}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a9759ecd4b93ba787d029f08f92340f08}\label{class_r_c_a_c_a9759ecd4b93ba787d029f08f92340f08}} 
+Eigen\+::\+Vector\+Xd {\bfseries u\+In}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a0779330dae6494cfbc0c35c777ab9ba0}\label{class_r_c_a_c_a0779330dae6494cfbc0c35c777ab9ba0}} 
+Eigen\+::\+Matrix\+Xd {\bfseries Phi}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a958fc9610d01f86f345238dffc88d925}\label{class_r_c_a_c_a958fc9610d01f86f345238dffc88d925}} 
+Eigen\+::\+Vector\+Xd {\bfseries uphi}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_af6ed65d38af325245d6857f4a709e1a5}\label{class_r_c_a_c_af6ed65d38af325245d6857f4a709e1a5}} 
+Eigen\+::\+Vector\+Xd {\bfseries yphi}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_a3502183205d4805bcb23c470adedc998}\label{class_r_c_a_c_a3502183205d4805bcb23c470adedc998}} 
+bool {\bfseries rcac\+R\+LS}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_acc23e081e96a8fd2dccccc8d0c0b7cdd}\label{class_r_c_a_c_acc23e081e96a8fd2dccccc8d0c0b7cdd}} 
+bool {\bfseries rcac\+Grad}
+\item 
+\mbox{\Hypertarget{class_r_c_a_c_ae965d44ced29623c260b51b4be928b77}\label{class_r_c_a_c_ae965d44ced29623c260b51b4be928b77}} 
+int {\bfseries kk} = 1
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The parent \hyperlink{class_r_c_a_c}{R\+C\+AC} class. This calss handles all the low level computation of \hyperlink{class_r_c_a_c}{R\+C\+AC} such as the filtering, coefficient updates, and keeping track of the regressors.
+
+Almost all the methods are polymorphic and can be modified by child classes to create \hyperlink{class_r_c_a_c}{R\+C\+AC} algorithms with more complex filtering. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}\label{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}} 
+\index{R\+C\+AC@{R\+C\+AC}!init@{init}}
+\index{init@{init}!R\+C\+AC@{R\+C\+AC}}
+\subsubsection{\texorpdfstring{init()}{init()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+\hyperlink{class_r_c_a_c}{R\+C\+AC} $\ast$ R\+C\+A\+C\+::init (\begin{DoxyParamCaption}\item[{T \&}]{F\+L\+A\+GS,  }\item[{\hyperlink{structrcac_filt}{rcac\+Filt} \&}]{F\+I\+LT,  }\item[{std\+::string \&}]{which\+R\+C\+AC }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Factory method for initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} types. This method is defined in the file \hyperlink{_r_c_a_c_creator_8hpp_source}{R\+C\+A\+C\+Creator.\+hpp}
+
+
+\begin{DoxyParams}{Parameters}
+{\em F\+L\+A\+GS} & template for a struct containing the required flags for the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used. \\
+\hline
+{\em F\+I\+LT} & struct containing the filter coefficients for $G_f$. \\
+\hline
+{\em which\+R\+C\+AC} & string containing the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used, defined in \hyperlink{_r_c_a_c_creator_8hpp_source}{R\+C\+A\+C\+Creator.\+hpp}. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+R\+C\+A\+C.\+hpp\item 
+R\+C\+A\+C.\+cpp\item 
+R\+C\+A\+C\+Creator.\+hpp\end{DoxyCompactItemize}
