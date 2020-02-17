@@ -22,6 +22,19 @@ struct rcacGradFlags
 };
 */
 
+/**
+ * This struct contains the basic parameters needed for the RCAC filtering to work.
+ * 
+ * This should be used as a starting point for defining your own Flag structs for
+ * different RCAC types.
+ * 
+ * @param lz Number of performance measurements
+ * @param ly Number of sensor measurements
+ * @param lu Number of control inputs
+ * @param Nc Controller order
+ * @param theta_0 Eigen vector with initial controller coefficients. Usually a vector of zeros
+ * @param filtorder Order of the filter (\f$G_f\f$)
+ */
 struct rcacFlags
 {
     //Basic RCAC Flags
@@ -34,6 +47,22 @@ struct rcacFlags
     int filtorder;    
 };
 
+/**
+ * This struct contains the filter coefficients. This struct should not need to 
+ * be overloaded unless a big change in the algorithm is needed i.e. all types
+ * of RCAC will use this same struct.
+ * 
+ * @param filtNu Matrix containing the numerator coefficients of (\f$G_f\f$).
+ * Should be dimension lz by lu*filtorder
+ * @param filtDu Matrix containing the denominator coefficients of (\f$G_f\f$).
+ * Dimension lz by lu*(filtorder-1)
+ * @param filtNz Matrix containing the numerator coefficients of a filter for the performance measurement.
+ * <b> Not currently used in any computations but is required! (set as identity matrix) </b>. 
+ * Dimension lz by lz
+ * @param filtDz Matrix containing the denominator coefficients of a filter for the performance measurement.
+ * <b> Not currently used in any computations but is required! (set as zero matrix) </b>. 
+ * Dimension lz by lz
+ */
 struct rcacFilt
 {
     Eigen::MatrixXd filtNu;
@@ -42,10 +71,25 @@ struct rcacFilt
     Eigen::MatrixXd filtDz;   
 };
 
+/**
+ * The parent RCAC class. This calss handles all the low level computation of RCAC
+ * such as the filtering, coefficient updates, and keeping track of the regressors.
+ * 
+ * Almost all the methods are polymorphic and can be modified by child classes
+ * to create RCAC algorithms with more complex filtering.
+ */
 class RCAC
 {
     public:
-        //Factory method for initializing RCAC types
+        /**
+         * Factory method for initializing RCAC types.
+         * This method is defined in the file RCACCreator.hpp
+         * 
+         * @param FLAGS template for a struct containing the required flags for 
+         * the type of RCAC to be used.
+         * @param FILT struct containing the filter coefficients for (\f$G_f\f$).
+         * @param whichRCAC string containing the type of RCAC to be used, defined in RCACCreator.hpp.
+         */
         template <typename T>
         static RCAC* init(
             T &FLAGS,
