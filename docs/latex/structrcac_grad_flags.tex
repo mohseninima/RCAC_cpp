@@ -1,0 +1,62 @@
+\hypertarget{structrcac_grad_flags}{}\section{rcac\+Grad\+Flags Struct Reference}
+\label{structrcac_grad_flags}\index{rcac\+Grad\+Flags@{rcac\+Grad\+Flags}}
+
+
+{\ttfamily \#include $<$R\+C\+A\+C\+Grad.\+hpp$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_aa41af27b85832a58edf4aa1004d5878e}\label{structrcac_grad_flags_aa41af27b85832a58edf4aa1004d5878e}} 
+int {\bfseries lz}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_aeec5a48d77bbd2b772a7929ae88240f6}\label{structrcac_grad_flags_aeec5a48d77bbd2b772a7929ae88240f6}} 
+int {\bfseries ly}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_a32e588defb7681a51047146f01ffc56a}\label{structrcac_grad_flags_a32e588defb7681a51047146f01ffc56a}} 
+int {\bfseries lu}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_abd48ba6b1705024407c404ec1d516fbf}\label{structrcac_grad_flags_abd48ba6b1705024407c404ec1d516fbf}} 
+int {\bfseries Nc}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_aa6a7ba7421f33b289a2a83dcc5126824}\label{structrcac_grad_flags_aa6a7ba7421f33b289a2a83dcc5126824}} 
+Eigen\+::\+Vector\+Xd {\bfseries theta\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_a2e8e4e6f5aceab6ad374401323163bc0}\label{structrcac_grad_flags_a2e8e4e6f5aceab6ad374401323163bc0}} 
+int {\bfseries filtorder}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_a9d997800d9823660dd77d0a13f07eb1d}\label{structrcac_grad_flags_a9d997800d9823660dd77d0a13f07eb1d}} 
+int {\bfseries k\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_grad_flags_a50b9a7a4eb078317dd355385b5975a18}\label{structrcac_grad_flags_a50b9a7a4eb078317dd355385b5975a18}} 
+double {\bfseries alpha}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This struct contains the basic parameters needed for gradient \hyperlink{class_r_c_a_c}{R\+C\+AC} to work.
+
+
+\begin{DoxyParams}{Parameters}
+{\em lz} & Number of performance measurements \\
+\hline
+{\em ly} & Number of sensor measurements \\
+\hline
+{\em lu} & Number of control inputs \\
+\hline
+{\em Nc} & Controller order \\
+\hline
+{\em theta\+\_\+0} & Eigen vector with initial controller coefficients. Usually a vector of zeros \\
+\hline
+{\em filtorder} & Order of the filter ( $G_f$) \\
+\hline
+{\em k\+\_\+0} & Minimum number of steps to run before starting the controller (usually k\+\_\+0 = Nc) \\
+\hline
+{\em alpha} & Step size scaling for gradient descent \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+R\+C\+A\+C\+Grad.\+hpp\end{DoxyCompactItemize}
