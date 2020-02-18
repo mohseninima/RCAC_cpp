@@ -206,9 +206,9 @@ Returns the controller order of \hyperlink{class_r_c_a_c}{R\+C\+AC}. \mbox{\Hype
 \index{init@{init}!R\+C\+AC@{R\+C\+AC}}
 \subsubsection{\texorpdfstring{init()}{init()}}
 {\footnotesize\ttfamily template$<$typename T $>$ \\
-\hyperlink{class_r_c_a_c}{R\+C\+AC} $\ast$ R\+C\+A\+C\+::init (\begin{DoxyParamCaption}\item[{T \&}]{F\+L\+A\+GS,  }\item[{\hyperlink{structrcac_filt}{rcac\+Filt} \&}]{F\+I\+LT,  }\item[{std\+::string \&}]{which\+R\+C\+AC }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+\hyperlink{class_r_c_a_c}{R\+C\+AC} $\ast$ R\+C\+A\+C\+::init (\begin{DoxyParamCaption}\item[{T \&}]{F\+L\+A\+GS,  }\item[{\hyperlink{structrcac_filt}{rcac\+Filt} \&}]{F\+I\+LT,  }\item[{std\+::string \&}]{rcac\+Type }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
-Factory method for initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} types. This method is defined in the file \hyperlink{_r_c_a_c_creator_8hpp_source}{R\+C\+A\+C\+Creator.\+hpp}
+Factory method for initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} types. This method is defined in the file \hyperlink{_r_c_a_c_creator_8hpp}{R\+C\+A\+C\+Creator.\+hpp}
 
 
 \begin{DoxyParams}{Parameters}
@@ -216,7 +216,18 @@ Factory method for initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} types. This 
 \hline
 {\em F\+I\+LT} & struct containing the filter coefficients for ( $G_f$). \\
 \hline
-{\em which\+R\+C\+AC} & string containing the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used, defined in \hyperlink{_r_c_a_c_creator_8hpp_source}{R\+C\+A\+C\+Creator.\+hpp}. \\
+{\em which\+R\+C\+AC} & string containing the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used, defined in \hyperlink{_r_c_a_c_creator_8hpp}{R\+C\+A\+C\+Creator.\+hpp}.\\
+\hline
+\end{DoxyParams}
+A factory method that creates a pointer to the specific type of \hyperlink{class_r_c_a_c}{R\+C\+AC} you want to use.
+
+
+\begin{DoxyParams}{Parameters}
+{\em F\+L\+A\+GS} & template for a struct containing the required flags for the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used. \\
+\hline
+{\em F\+I\+LT} & struct containing the filter coefficients for ( $G_f$). \\
+\hline
+{\em which\+R\+C\+AC} & string containing the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used. \\
 \hline
 \end{DoxyParams}
 \mbox{\Hypertarget{class_r_c_a_c_aac17e469acf0f2457941d18ae02bfe07}\label{class_r_c_a_c_aac17e469acf0f2457941d18ae02bfe07}} 
@@ -254,4 +265,4 @@ The documentation for this class was generated from the following files\+:\begin
 \item 
 R\+C\+A\+C.\+hpp\item 
 R\+C\+A\+C.\+cpp\item 
-R\+C\+A\+C\+Creator.\+hpp\end{DoxyCompactItemize}
+\hyperlink{_r_c_a_c_creator_8hpp}{R\+C\+A\+C\+Creator.\+hpp}\end{DoxyCompactItemize}

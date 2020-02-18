@@ -1,5 +1,9 @@
 \hypertarget{structrcac_rls_flags}{}\section{rcac\+Rls\+Flags Struct Reference}
 \label{structrcac_rls_flags}\index{rcac\+Rls\+Flags@{rcac\+Rls\+Flags}}
+
+
+{\ttfamily \#include $<$R\+C\+A\+C\+R\+L\+S.\+hpp$>$}
+
 \subsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -15,9 +19,6 @@ int {\bfseries lu}
 \mbox{\Hypertarget{structrcac_rls_flags_aca7ebde32128866a43a447f34e92928c}\label{structrcac_rls_flags_aca7ebde32128866a43a447f34e92928c}} 
 int {\bfseries Nc}
 \item 
-\mbox{\Hypertarget{structrcac_rls_flags_abe27441b564ecfdf15fa511275742224}\label{structrcac_rls_flags_abe27441b564ecfdf15fa511275742224}} 
-double {\bfseries lambda}
-\item 
 \mbox{\Hypertarget{structrcac_rls_flags_a8ed42f23cff0f5c333dc453597c0feee}\label{structrcac_rls_flags_a8ed42f23cff0f5c333dc453597c0feee}} 
 Eigen\+::\+Vector\+Xd {\bfseries theta\+\_\+0}
 \item 
@@ -26,6 +27,9 @@ int {\bfseries filtorder}
 \item 
 \mbox{\Hypertarget{structrcac_rls_flags_a05c788f1af0d4fffffa6aea1be991b0b}\label{structrcac_rls_flags_a05c788f1af0d4fffffa6aea1be991b0b}} 
 int {\bfseries k\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_rls_flags_abe27441b564ecfdf15fa511275742224}\label{structrcac_rls_flags_abe27441b564ecfdf15fa511275742224}} 
+double {\bfseries lambda}
 \item 
 \mbox{\Hypertarget{structrcac_rls_flags_a2eace0273d4c073088e3116c9b2ddcc5}\label{structrcac_rls_flags_a2eace0273d4c073088e3116c9b2ddcc5}} 
 Eigen\+::\+Matrix\+Xd {\bfseries P0}
@@ -36,6 +40,36 @@ Eigen\+::\+Matrix\+Xd {\bfseries Ru}
 \mbox{\Hypertarget{structrcac_rls_flags_aeef4a3ade42d1d937f09dfaa9b8ce5ba}\label{structrcac_rls_flags_aeef4a3ade42d1d937f09dfaa9b8ce5ba}} 
 Eigen\+::\+Matrix\+Xd {\bfseries Rz}
 \end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This struct contains the basic parameters needed for R\+LS R\+C\+A\+Cto work.
+
+
+\begin{DoxyParams}{Parameters}
+{\em lz} & Number of performance measurements \\
+\hline
+{\em ly} & Number of sensor measurements \\
+\hline
+{\em lu} & Number of control inputs \\
+\hline
+{\em Nc} & Controller order \\
+\hline
+{\em theta\+\_\+0} & Eigen vector with initial controller coefficients. Usually a vector of zeros \\
+\hline
+{\em filtorder} & Order of the filter ( $G_f$) \\
+\hline
+{\em k\+\_\+0} & Minimum number of steps to run before starting the controller (usually k\+\_\+0 = Nc) \\
+\hline
+{\em lambda} & Forgetting factor for R\+LS \\
+\hline
+{\em P0} & Matrix containing the initial value for the covariance matrix of R\+LS (P0 = Rtheta$^\wedge$-\/1) Size is ltheta by ltheta where ltheta = Nc$\ast$lu(lu+ly) \\
+\hline
+{\em Ru} & Matrix containing a weighting on the control effort. Size is lu by lu. {\bfseries  Currently broken, set as a zero matrix } \\
+\hline
+{\em Rz} & Matrix containing a weghting on the performance measurement. Size is lz by lz. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}

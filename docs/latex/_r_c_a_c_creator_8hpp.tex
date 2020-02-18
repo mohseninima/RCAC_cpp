@@ -1,0 +1,62 @@
+\hypertarget{_r_c_a_c_creator_8hpp}{}\section{R\+C\+A\+C\+Creator.\+hpp File Reference}
+\label{_r_c_a_c_creator_8hpp}\index{R\+C\+A\+C\+Creator.\+hpp@{R\+C\+A\+C\+Creator.\+hpp}}
+{\ttfamily \#include \char`\"{}R\+C\+A\+C.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}R\+C\+A\+C\+R\+L\+S.\+hpp\char`\"{}}\newline
+Include dependency graph for R\+C\+A\+C\+Creator.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_r_c_a_c_creator_8hpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_r_c_a_c}{R\+C\+AC} $\ast$ \hyperlink{_r_c_a_c_creator_8hpp_ade37a3e8eb11e33b6cad1d31ce1691fe}{init\+Simulink} (double $\ast$\&F\+L\+A\+G\+Smx, double $\ast$\&F\+I\+L\+Tmx, std\+::string \&rcac\+Type)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_r_c_a_c_creator_8hpp_ae1ffa3a482052e3f0c2029e14dcc74eb}\label{_r_c_a_c_creator_8hpp_ae1ffa3a482052e3f0c2029e14dcc74eb}} 
+std\+::string {\bfseries use\+R\+LS} = \char`\"{}R\+LS\char`\"{}
+\item 
+\mbox{\Hypertarget{_r_c_a_c_creator_8hpp_a1514da1259b217343d732f38db5afdea}\label{_r_c_a_c_creator_8hpp_a1514da1259b217343d732f38db5afdea}} 
+std\+::string {\bfseries use\+Grad} = \char`\"{}Grad\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Define your \hyperlink{class_r_c_a_c}{R\+C\+AC} types here
+
+
+\begin{DoxyParams}{Parameters}
+{\em use\+R\+LS} & The flag for the R\+LS based \hyperlink{class_r_c_a_c}{R\+C\+AC} \\
+\hline
+{\em use\+Grad} & The flag for the Gradient based \hyperlink{class_r_c_a_c}{R\+C\+AC} \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_r_c_a_c_creator_8hpp_ade37a3e8eb11e33b6cad1d31ce1691fe}\label{_r_c_a_c_creator_8hpp_ade37a3e8eb11e33b6cad1d31ce1691fe}} 
+\index{R\+C\+A\+C\+Creator.\+hpp@{R\+C\+A\+C\+Creator.\+hpp}!init\+Simulink@{init\+Simulink}}
+\index{init\+Simulink@{init\+Simulink}!R\+C\+A\+C\+Creator.\+hpp@{R\+C\+A\+C\+Creator.\+hpp}}
+\subsubsection{\texorpdfstring{init\+Simulink()}{initSimulink()}}
+{\footnotesize\ttfamily \hyperlink{class_r_c_a_c}{R\+C\+AC}$\ast$ init\+Simulink (\begin{DoxyParamCaption}\item[{double $\ast$\&}]{F\+L\+A\+G\+Smx,  }\item[{double $\ast$\&}]{F\+I\+L\+Tmx,  }\item[{std\+::string \&}]{rcac\+Type }\end{DoxyParamCaption})}
+
+This function takes an array format of the Flags and Filt from M\+A\+T\+L\+AB and converts them to a Eigen compatible matrix/vector.
+
+This must be defined for each type of \hyperlink{class_r_c_a_c}{R\+C\+AC} that is created.
+
+{\bfseries  This function is N\+OT meant to be called outside of R\+C\+A\+C\+Simulink.\+cpp }
+
+
+\begin{DoxyParams}{Parameters}
+{\em F\+L\+A\+G\+Smx} & Array from M\+A\+T\+L\+AB in a special order for the flags (check the source file for the order) \\
+\hline
+{\em F\+I\+L\+Tmx} & Array from M\+A\+T\+L\+AB in a special order for the filter variables \\
+\hline
+{\em F\+I\+LT} & \hyperlink{class_r_c_a_c}{R\+C\+AC} type taken from a matlab char string (C-\/style) and converted to a string (C++ string) \\
+\hline
+\end{DoxyParams}

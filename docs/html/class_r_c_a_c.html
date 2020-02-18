@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>My Project: RCAC Class Reference</title>
+<title>RCAC C++: RCAC Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -28,7 +28,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
-   <div id="projectname">My Project
+   <div id="projectname">RCAC C++
    </div>
   </td>
  </tr>
@@ -491,7 +491,7 @@ template&lt;typename T &gt; </div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>whichRCAC</em>&#160;</td>
+          <td class="paramname"><em>rcacType</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -505,12 +505,21 @@ template&lt;typename T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Factory method for initializing <a class="el" href="class_r_c_a_c.html">RCAC</a> types. This method is defined in the file <a class="el" href="_r_c_a_c_creator_8hpp_source.html">RCACCreator.hpp</a></p>
+<p>Factory method for initializing <a class="el" href="class_r_c_a_c.html">RCAC</a> types. This method is defined in the file <a class="el" href="_r_c_a_c_creator_8hpp.html">RCACCreator.hpp</a></p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">FLAGS</td><td>template for a struct containing the required flags for the type of <a class="el" href="class_r_c_a_c.html">RCAC</a> to be used. </td></tr>
     <tr><td class="paramname">FILT</td><td>struct containing the filter coefficients for ( <img class="formulaInl" alt="$G_f$" src="form_0.png"/>). </td></tr>
-    <tr><td class="paramname">whichRCAC</td><td>string containing the type of <a class="el" href="class_r_c_a_c.html">RCAC</a> to be used, defined in <a class="el" href="_r_c_a_c_creator_8hpp_source.html">RCACCreator.hpp</a>. </td></tr>
+    <tr><td class="paramname">whichRCAC</td><td>string containing the type of <a class="el" href="class_r_c_a_c.html">RCAC</a> to be used, defined in <a class="el" href="_r_c_a_c_creator_8hpp.html">RCACCreator.hpp</a>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>A factory method that creates a pointer to the specific type of <a class="el" href="class_r_c_a_c.html">RCAC</a> you want to use.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">FLAGS</td><td>template for a struct containing the required flags for the type of <a class="el" href="class_r_c_a_c.html">RCAC</a> to be used. </td></tr>
+    <tr><td class="paramname">FILT</td><td>struct containing the filter coefficients for ( <img class="formulaInl" alt="$G_f$" src="form_0.png"/>). </td></tr>
+    <tr><td class="paramname">whichRCAC</td><td>string containing the type of <a class="el" href="class_r_c_a_c.html">RCAC</a> to be used. </td></tr>
   </table>
   </dd>
 </dl>

@@ -10,9 +10,25 @@
 //Purpose: This file contains the implementation of the factory function to
 //generate new RCAC versions
 
-//RCAC Types
+/**
+ * @file
+ * Define the methods for initializing different RCAC types here
+ * 
+ * @param useRLS The flag for the RLS based RCAC
+ * @param useGrad The flag for the Gradient based RCAC
+ */
+//RCAC Types: define your RCAC typenames here
 std::string useRLS = "RLS";
+std::string useGrad = "Grad";
 
+/**
+ * A factory method that creates a pointer to the specific type of RCAC you want to use.
+ * 
+ * @param FLAGS template for a struct containing the required flags for 
+ * the type of RCAC to be used.
+ * @param FILT struct containing the filter coefficients for (\f$G_f\f$).
+ * @param whichRCAC string containing the type of RCAC to be used.
+ */
 //Factory Method (TODO: move to a separate class, fix memory leak)
 template <typename T>
 RCAC* RCAC::init(
@@ -33,10 +49,18 @@ RCAC* RCAC::init(
 }
 
 
-
-
-
-
+/**
+ * This function takes an array format of the Flags and Filt from MATLAB and converts
+ * them to a Eigen compatible matrix/vector.
+ * 
+ * This must be defined for each type of RCAC that is created.
+ * 
+ * <b> This function is NOT meant to be called outside of RCACSimulink.cpp </b>
+ * 
+ * @param FLAGSmx Array from MATLAB in a special order for the flags (check the source file for the order)
+ * @param FILTmx Array from MATLAB in a special order for the filter variables
+ * @param FILT RCAC type taken from a matlab char string (C-style) and converted to a string (C++ string)
+ */
 //Function initSimulink, takes the array format of the RCAC variables from 
 //simulink and converts it to the struct format and returns a pointer to an RCAC
 //object
@@ -44,6 +68,7 @@ RCAC* RCAC::init(
 //ITEGRATE ME:
 //std::string msg = std::string("Aw snap: ");       
 //mexErrMsgTxt(msg.c_str());
+//TODO: move filt outside of the if statement
 RCAC* initSimulink(
     double* &FLAGSmx,
     double* &FILTmx,
