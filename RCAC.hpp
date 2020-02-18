@@ -72,7 +72,7 @@ struct rcacFilt
 };
 
 /**
- * The parent RCAC class. This calss handles all the low level computation of RCAC
+ * The parent RCAC class. This class handles all the low level computation of RCAC
  * such as the filtering, coefficient updates, and keeping track of the regressors.
  * 
  * Almost all the methods are polymorphic and can be modified by child classes

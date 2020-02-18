@@ -13,7 +13,7 @@
 //of the base RCAC class
 
 /**
- * This struct contains the basic parameters needed for RLS RCACto work.
+ * This struct contains the basic parameters needed for RLS RCAC to work.
  * 
  * @param lz Number of performance measurements
  * @param ly Number of sensor measurements
@@ -61,7 +61,7 @@ class RCACRLS: public RCAC
          * @param FLAGS rcacRlsFlags struct containing the flags for the RLS RCAC
          * @param FILT base rcacFilt struct containing the filter coefficients
          */
-        //Function initRLS: Initializes RCAC using RLS with the given flags and
+        //Value ctor: Initializes RCAC using RLS with the given flags and
         //filter values
         RCACRLS(
             rcacRlsFlags &FLAGS,

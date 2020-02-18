@@ -3,6 +3,8 @@
 
 #include "RCAC.hpp"
 #include "RCACRLS.hpp"
+#include "RCACGrad.hpp"
+//#include <any>
 
 
 //Name: Nima Mohseni
@@ -37,9 +39,21 @@ RCAC* RCAC::init(
     std::string &rcacType
 )
 {
+    //Hack to get things working with templates
+    //std::any FLAGStemp(FLAGS);
+    void *FLAGStemp = (void*)&FLAGS;
+
     if (rcacType == useRLS)
     {
-        return new RCACRLS(FLAGS, FILT);
+        //rcacRlsFlags FLAGSnew = std::any_cast<rcacRlsFlags>(FLAGStemp);
+        rcacRlsFlags *FLAGSnew = (rcacRlsFlags*)FLAGStemp;
+        return new RCACRLS(*FLAGSnew, FILT);
+    }
+    else if (rcacType == useGrad)
+    {
+        //rcacGradFlags FLAGSnew = std::any_cast<rcacGradFlags>(FLAGStemp);
+        rcacGradFlags *FLAGSnew = (rcacGradFlags*)FLAGStemp;
+        return new RCACGrad(*FLAGSnew, FILT);
     }
     else
     {
@@ -48,6 +62,96 @@ RCAC* RCAC::init(
     }  
 }
 
+/*
+template <>
+RCAC* RCAC::init(
+    rcacRlsFlags &FLAGS, 
+    rcacFilt &FILT, 
+    std::string &rcacType
+)
+{
+    if (rcacType == useRLS)
+    {
+        return new RCACRLS(FLAGS, FILT);
+    }
+    {
+        std::cout << "Bad RCAC Type!" << "\n";
+        exit(EXIT_FAILURE);
+    } 
+}
+
+template <>
+RCAC* RCAC::init(
+    rcacGradFlags &FLAGS,
+    rcacFilt &FILT, 
+    std::string &rcacType
+)
+{
+    if (rcacType == useGrad)
+    {
+        return new RCACGrad(FLAGS, FILT);
+    }
+    {
+        std::cout << "Bad RCAC Type!" << "\n";
+        exit(EXIT_FAILURE);
+    }   
+}
+*/
+
+//load FILTmx into FILT struct, should not be used outside initSimulink
+//mxArray must be in format
+//[FILTNu'(:); FILTDu'(:); FILTNz'(:); FILTDz'(:)]
+//Matrices must be transposed and then vectorized
+rcacFilt initFiltSimulink(
+    int lz,
+    int ly,
+    int lu,
+    int Nc,
+    int filtorder,
+    double* &FILTmx
+)
+{
+    rcacFilt FILT;
+
+    //load Gf numerator
+    int filtIndex = 0;
+    FILT.filtNu.resize(lz, lu*filtorder); //Tell eigen the matrix size
+    FILT.filtNu = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)lz, (double)lu*filtorder);
+    for (int i = 0; i < (lz*lu*filtorder); i++)
+    {
+        //FILT.filtNu << FILTmx[filtIndex]; 
+        filtIndex++;
+    }
+      
+    //load Gf Denominator
+    FILT.filtDu.resize(lz, lz*(filtorder-1)); //Tell eigen the matrix size
+    FILT.filtDu = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)lz, (double)lz*(filtorder-1));
+    for (int i = 0; i < (lz*lz*(filtorder-1)); i++)
+    {
+        //FILT.filtDu << FILTmx[filtIndex]; 
+        filtIndex++;
+    }
+       
+    //load Gf_z Numerator (never used?)
+    FILT.filtNz.resize(lz, lz); //Tell eigen the matrix size
+    FILT.filtNz = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)lz, (double)lz);
+    for (int i = 0; i < (lz*lz); i++)
+    {
+        //FILT.filtNz << FILTmx[filtIndex]; 
+        filtIndex++;
+    }
+
+    //load Gf_z Denominator (never used?)
+    FILT.filtDz.resize(lz, lz); //Tell eigen the matrix size
+    FILT.filtDz = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)lz, (double)lz);
+    for (int i = 0; i < (lz*lz); i++)
+    {
+        //FILT.filtDz << FILTmx[filtIndex]; 
+        filtIndex++;
+    }
+
+    return(FILT);
+}
 
 /**
  * This function takes an array format of the Flags and Filt from MATLAB and converts
@@ -79,7 +183,7 @@ RCAC* initSimulink(
     {
         //load FLAGSmx into flags struct
         //mxArray must be in format
-        //[lu; lz; ly; Nc; filtorder; k_0; P0'(:); Ru'(:); Rz'(:); lambda; theta_0]
+        //[lz; ly; lu; Nc; filtorder; k_0; P0'(:); Ru'(:); Rz'(:); lambda; theta_0]
         //Matrices must be transposed and then vectorized
 
         rcacRlsFlags FLAGS;
@@ -135,55 +239,49 @@ RCAC* initSimulink(
             flagsIndex++;
         }
 
-        //load FILTmx into FILT struct
-        //mxArray must be in format
-        //[FILTNu'(:); FILTDu'(:); FILTNz'(:); FILTDz'(:)]
-        //Matrices must be transposed and then vectorized
-
-        rcacFilt FILT;
-
-        //load Gf numerator
-        int filtIndex = 0;
-        FILT.filtNu.resize(FLAGS.lz, FLAGS.lu*FLAGS.filtorder); //Tell eigen the matrix size
-        FILT.filtNu = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)FLAGS.lz, (double)FLAGS.lu*FLAGS.filtorder);
-        for (int i = 0; i < (FLAGS.lz*FLAGS.lu*FLAGS.filtorder); i++)
-        {
-            //FILT.filtNu << FILTmx[filtIndex]; 
-            filtIndex++;
-        }
-        
-        //mexPrintf("%f\n",FILT.filtNu(8,23));
-        //mexPrintf("%f\n",FILTmx[3]);
-      
-        //load Gf Denominator
-        FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*(FLAGS.filtorder-1)); //Tell eigen the matrix size
-        FILT.filtDu = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)FLAGS.lz, (double)FLAGS.lz*(FLAGS.filtorder-1));
-        for (int i = 0; i < (FLAGS.lz*FLAGS.lz*(FLAGS.filtorder-1)); i++)
-        {
-            //FILT.filtDu << FILTmx[filtIndex]; 
-            filtIndex++;
-        }
-       
-        //load Gf_z Numerator (never used?)
-        FILT.filtNz.resize(FLAGS.lz, FLAGS.lz); //Tell eigen the matrix size
-        FILT.filtNz = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)FLAGS.lz, (double)FLAGS.lz);
-        for (int i = 0; i < (FLAGS.lz*FLAGS.lz); i++)
-        {
-            //FILT.filtNz << FILTmx[filtIndex]; 
-            filtIndex++;
-        }
-
-        //load Gf_z Denominator (never used?)
-        FILT.filtDz.resize(FLAGS.lz, FLAGS.lz); //Tell eigen the matrix size
-        FILT.filtDz = Eigen::Map<Eigen::MatrixXd>(&FILTmx[filtIndex], (double)FLAGS.lz, (double)FLAGS.lz);
-        for (int i = 0; i < (FLAGS.lz*FLAGS.lz); i++)
-        {
-            //FILT.filtDz << FILTmx[filtIndex]; 
-            filtIndex++;
-        }
+        rcacFilt FILT = initFiltSimulink(FLAGS.lz, FLAGS.ly, FLAGS.lu,
+                                         FLAGS.Nc, FLAGS.filtorder, FILTmx);
   
         //create RCACRLS
         return new RCACRLS(FLAGS, FILT);
+    }
+    else if (rcacType == useGrad)
+    {
+        //load FLAGSmx into flags struct
+        //mxArray must be in format
+        //[lz; ly; lu; Nc; filtorder; k_0; alpha; theta_0]
+        //Matrices must be transposed and then vectorized
+
+        rcacGradFlags FLAGS;
+        //load the first 6 variables
+        int flagsIndex = 0;
+        FLAGS.lz = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.ly = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.lu = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.Nc = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.filtorder = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.k_0 = (int)FLAGSmx[flagsIndex]; flagsIndex++;
+
+        //load the step size scaling
+        FLAGS.alpha = FLAGSmx[flagsIndex]; flagsIndex++;
+
+        int ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly);
+
+        //load theta_0
+        FLAGS.theta_0.resize(ltheta); //Tell eigen the matrix size
+        FLAGS.theta_0 = Eigen::Map<Eigen::VectorXd>(&FLAGSmx[flagsIndex], (double)ltheta, 1);
+        for (int i = 0; i < ltheta; i++)
+        {
+            //FLAGS.theta_0 << FLAGSmx[flagsIndex]; 
+            flagsIndex++;
+        }
+
+        rcacFilt FILT = initFiltSimulink(FLAGS.lz, FLAGS.ly, FLAGS.lu,
+                                         FLAGS.Nc, FLAGS.filtorder, FILTmx);
+
+        //create RCACGrad
+        return new RCACGrad(FLAGS, FILT);
+
     }
     else
     {
