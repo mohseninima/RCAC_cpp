@@ -1,0 +1,173 @@
+This is a guide on getting started with the \hyperlink{class_r_c_a_c}{R\+C\+AC} library.
+
+\section*{How to install? }
+
+First download the source code from the \href{https://github.com/mohseninima/RCAC_cpp}{\tt repository}. Only the $\ast$.cpp and $\ast$.hpp files are needed. Next, you will need a copy of the Eigen matrix library, located \href{http://eigen.tuxfamily.org/}{\tt here}. Extract the {\itshape Eigen} and {\itshape unsupported} folders and place them in the same folder as the \hyperlink{class_r_c_a_c}{R\+C\+AC} code. You should have a folder structure similar to the following.
+
+
+\begin{DoxyCode}
+<root>
+    Eigen/
+    unsupported/
+    RCAC.cpp
+    RCAC.hpp
+    RCACCreator.hpp
+    RCAC*.cpp
+    RCAC*.hpp
+    .
+    .
+    .
+    main.cpp (your code)
+\end{DoxyCode}
+
+
+\section*{Using Recursive Least Squares (R\+LS) \hyperlink{class_r_c_a_c}{R\+C\+AC} in C++ }
+
+Using R\+LS \hyperlink{class_r_c_a_c}{R\+C\+AC} in your own code requires 6 main steps
+
+
+\begin{DoxyEnumerate}
+\item Including \char`\"{}\+R\+C\+A\+C\+Creator.\+hpp\char`\"{} and Eigen
+\item Defining and assigning the \hyperlink{structrcac_rls_flags}{rcac\+Rls\+Flags} struct
+\item Defining and assigning the \hyperlink{structrcac_filt}{rcac\+Filt} struct
+\item Initializing \hyperlink{class_r_c_a_c}{R\+C\+AC}
+\item Using the \hyperlink{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}{R\+C\+A\+C\+::one\+Step()} method to propagate \hyperlink{class_r_c_a_c}{R\+C\+AC} by one step
+\item Using the \hyperlink{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}{R\+C\+A\+C\+::get\+Control()} method to get the associated control input
+\end{DoxyEnumerate}
+
+\subsection*{Creating the \hyperlink{structrcac_rls_flags}{rcac\+Rls\+Flags} struct }
+
+This struct defines the base parameters such as controller order and sizes of the inputs and outputs. The list of members is
+\begin{DoxyItemize}
+\item lu\+: Number of control inputs (Type\+: int)
+\item ly\+: Number of sensor measurements (Type\+: int)
+\item lz\+: Number of performance measurements (Type\+: int)
+\item Nc\+: Controller order (Type\+: int)
+\item filtorder\+: Order of the filter $G_f$ (Type\+: int)
+\item k\+\_\+0\+: Starting timestep for the controller (Type\+: int) (Usually = Nc)
+\item P0\+: Initial value of the covariance matrix for R\+LS (Type\+: Eigen\+::\+Matrix\+Xd) (ltheta by ltheta)
+\item Ru\+: Weighting matrix on the control input (Type\+: Eigen\+::\+Matrix\+Xd) (lu by lu)
+\item Rz\+: Weighting matrix on the retrospective performance (usually identity) (Type\+: Eigen\+::\+Matrix\+Xd) (lz by lz)
+\item lambda\+: The forgetting factor for R\+LS (Type\+: double)
+\item theta\+\_\+0\+: Initial value for the controller coefficients (Type\+: Eigen\+::\+Vector\+Xd) (ltheta by 1)
+\end{DoxyItemize}
+
+The parameter ltheta is not needed to be given to \hyperlink{class_r_c_a_c}{R\+C\+AC} directly but is defined as $ l_\theta = N_c l_u(l_u+l_y) $
+
+An example struct for a 2 input 4 output plant with a 10th order controller and filtorder of 4 is given below 
+\begin{DoxyCode}
+\hyperlink{structrcac_rls_flags}{rcacRlsFlags} FLAGS;
+FLAGS.lu = 2;
+FLAGS.lz = 4;
+FLAGS.ly = 4;
+FLAGS.Nc = 10;
+\textcolor{keywordtype}{int} ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly); \textcolor{comment}{//Define ltheta to help create other variables}
+FLAGS.filtorder = 4;
+FLAGS.k\_0 = FLAGS.Nc;
+FLAGS.P0 = 100000*MatrixXd::Identity(ltheta, ltheta); \textcolor{comment}{//Create a matrix with diag values of 100000}
+FLAGS.Ru = MatrixXd::Zero(FLAGS.lu, FLAGS.lu); \textcolor{comment}{//Create a zero matrix (no weighting on control effort)}
+FLAGS.Rz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz); \textcolor{comment}{//Create the identity matrix}
+FLAGS.lambda = 1;
+FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the RCAC coefficients to zero}
+\end{DoxyCode}
+
+
+\subsection*{Creating the \hyperlink{structrcac_filt}{rcac\+Filt} struct }
+
+\subsection*{Putting it all together }
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include "Eigen/Core"}
+\textcolor{preprocessor}{#include "\hyperlink{_r_c_a_c_creator_8hpp}{RCACCreator.hpp}"}
+\textcolor{preprocessor}{#include <iostream>}
+\textcolor{preprocessor}{#include <string>}
+\textcolor{keyword}{using namespace }\hyperlink{namespace_eigen}{Eigen};
+
+\textcolor{keywordtype}{int} main()
+\{
+    \textcolor{comment}{//Initialize the plant}
+    \textcolor{keywordtype}{int} lx = 2;
+    \textcolor{keywordtype}{int} lu = 2;
+    \textcolor{keywordtype}{int} ly = 2;
+    \textcolor{keywordtype}{int} lz = ly;
+
+    MatrixXd A(lx,lx);
+    A << 0.25,1,
+          0,0.25;
+
+    MatrixXd B(lx,lu);
+    B << 1,0,
+         0,1;
+
+    MatrixXd C(ly,lx);
+    C << 1,0,
+         0,3;
+
+    MatrixXd x(lx,1);
+    x << 0,
+         0;
+
+    \textcolor{comment}{//End time of the simulation}
+    \textcolor{keywordtype}{int} kend = 30;
+
+    \textcolor{comment}{//Set Flags}
+    \hyperlink{structrcac_rls_flags}{rcacRlsFlags} FLAGS;
+    FLAGS.lu = lu;
+    FLAGS.lz = lz;
+    FLAGS.ly = ly;
+    FLAGS.Nc = 4;
+    \textcolor{keywordtype}{int} ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly);
+    FLAGS.filtorder = 4;
+    FLAGS.k\_0 = FLAGS.Nc;
+    FLAGS.P0 = 100000*MatrixXd::Identity(ltheta, ltheta);
+    FLAGS.Ru = MatrixXd::Zero(FLAGS.lu, FLAGS.lu);
+    FLAGS.Rz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz);
+    FLAGS.lambda = 1;
+    FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1);
+
+    std::cout << \textcolor{stringliteral}{"Flags Set\(\backslash\)n"}; 
+
+    \textcolor{comment}{//Set Filter}
+    \hyperlink{structrcac_filt}{rcacFilt} FILT;
+    \textcolor{keywordtype}{int} Hnum = FLAGS.filtorder-1;
+    FILT.filtNu.resize(FLAGS.lz, FLAGS.lu*(Hnum+1));
+    FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*Hnum);
+    FILT.filtNu << 0,0, 1,0, 0.25,1, 0.0625,0.5,
+                   0,0, 0,3, 0,0.75, 0,0.1875; 
+    FILT.filtDu << 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0;
+    FILT.filtNz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz);
+    FILT.filtDz =  MatrixXd::Zero(FLAGS.lz, FLAGS.lz);
+
+    std::cout << \textcolor{stringliteral}{"Filter Set\(\backslash\)n"}; 
+
+    \textcolor{comment}{//Initialize RCAC}
+    std::string rcacType = \textcolor{stringliteral}{"RLS"};
+    \hyperlink{class_r_c_a_c}{RCAC} *myRCAC;
+    \textcolor{comment}{//Call the factory method to initialize RCAC}
+    myRCAC = myRCAC->\hyperlink{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}{init}<\hyperlink{structrcac_rls_flags}{rcacRlsFlags}>(FLAGS, FILT, rcacType);
+    std::cout << \textcolor{stringliteral}{"RLS Init\(\backslash\)n"}; 
+
+    \textcolor{comment}{//Run Simulation}
+    VectorXd y(FLAGS.ly,1);
+    VectorXd z(FLAGS.lz,1);
+    VectorXd u(FLAGS.lu,1);
+    u = MatrixXd::Zero(FLAGS.lu, 1);
+
+    \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} k = 0; k < kend; k++)
+    \{
+        y = C*x;
+        z = y - VectorXd::Ones(FLAGS.ly);
+
+        x = A*x + B*u;        
+
+        myRCAC->\hyperlink{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}{oneStep}(u, z, z);
+        u = myRCAC->\hyperlink{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}{getControl}();
+
+        \textcolor{comment}{//std::cout << "y: " << y << ", z: " << z << ", u: " << u << std::endl;}
+    \}
+    \textcolor{keywordflow}{return}(0);
+\}
+\end{DoxyCode}
+ 

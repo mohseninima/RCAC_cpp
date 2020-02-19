@@ -2,6 +2,8 @@ var NAVTREE =
 [
   [ "RCAC C++", "index.html", [
     [ "RCAC_cpp", "md__r_e_a_d_m_e.html", null ],
+    [ "Getting Started", "_getting_started.html", null ],
+    [ "Advanced", "_advanced.html", "_advanced" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -23,7 +25,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_r_c_a_c_8hpp_source.html"
+"_advanced.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

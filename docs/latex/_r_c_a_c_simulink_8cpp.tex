@@ -1,0 +1,54 @@
+\hypertarget{_r_c_a_c_simulink_8cpp}{}\section{R\+C\+A\+C\+Simulink.\+cpp File Reference}
+\label{_r_c_a_c_simulink_8cpp}\index{R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include \char`\"{}simstruc.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}R\+C\+A\+C\+Creator.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Eigen/\+Core\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}cg\+\_\+sfun.\+h\char`\"{}}\newline
+Include dependency graph for R\+C\+A\+C\+Simulink.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_r_c_a_c_simulink_8cpp__incl}
+\end{center}
+\end{figure}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_r_c_a_c_simulink_8cpp_a0f61df833e166c743295eebf43f0b142}{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME}~R\+C\+A\+C\+Simulink
+\item 
+\#define \hyperlink{_r_c_a_c_simulink_8cpp_a9a4ab27953070e39249f3fad28e93749}{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL}~2
+\item 
+\#define \hyperlink{_r_c_a_c_simulink_8cpp_a2d90930d28724edc5e223109ddc6e4f1}{M\+\_\+\+E\+R\+R\+\_\+\+M\+SG}(S,  txt)~ss\+Set\+Error\+Status(S, txt)
+\item 
+\#define \hyperlink{_r_c_a_c_simulink_8cpp_ac032abbf580c891fb0c11e63e9bc668a}{M\+D\+L\+\_\+\+S\+T\+A\+RT}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_r_c_a_c_simulink_8cpp_a2d90930d28724edc5e223109ddc6e4f1}\label{_r_c_a_c_simulink_8cpp_a2d90930d28724edc5e223109ddc6e4f1}} 
+\index{R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}!M\+\_\+\+E\+R\+R\+\_\+\+M\+SG@{M\+\_\+\+E\+R\+R\+\_\+\+M\+SG}}
+\index{M\+\_\+\+E\+R\+R\+\_\+\+M\+SG@{M\+\_\+\+E\+R\+R\+\_\+\+M\+SG}!R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}}
+\subsubsection{\texorpdfstring{M\+\_\+\+E\+R\+R\+\_\+\+M\+SG}{M\_ERR\_MSG}}
+{\footnotesize\ttfamily \#define M\+\_\+\+E\+R\+R\+\_\+\+M\+SG(\begin{DoxyParamCaption}\item[{}]{S,  }\item[{}]{txt }\end{DoxyParamCaption})~ss\+Set\+Error\+Status(S, txt)}
+
+\mbox{\Hypertarget{_r_c_a_c_simulink_8cpp_ac032abbf580c891fb0c11e63e9bc668a}\label{_r_c_a_c_simulink_8cpp_ac032abbf580c891fb0c11e63e9bc668a}} 
+\index{R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}!M\+D\+L\+\_\+\+S\+T\+A\+RT@{M\+D\+L\+\_\+\+S\+T\+A\+RT}}
+\index{M\+D\+L\+\_\+\+S\+T\+A\+RT@{M\+D\+L\+\_\+\+S\+T\+A\+RT}!R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}}
+\subsubsection{\texorpdfstring{M\+D\+L\+\_\+\+S\+T\+A\+RT}{MDL\_START}}
+{\footnotesize\ttfamily \#define M\+D\+L\+\_\+\+S\+T\+A\+RT}
+
+\mbox{\Hypertarget{_r_c_a_c_simulink_8cpp_a9a4ab27953070e39249f3fad28e93749}\label{_r_c_a_c_simulink_8cpp_a9a4ab27953070e39249f3fad28e93749}} 
+\index{R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}!S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL@{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL}}
+\index{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL@{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL}!R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}}
+\subsubsection{\texorpdfstring{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL}{S\_FUNCTION\_LEVEL}}
+{\footnotesize\ttfamily \#define S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+L\+E\+V\+EL~2}
+
+\mbox{\Hypertarget{_r_c_a_c_simulink_8cpp_a0f61df833e166c743295eebf43f0b142}\label{_r_c_a_c_simulink_8cpp_a0f61df833e166c743295eebf43f0b142}} 
+\index{R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}!S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME@{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME}}
+\index{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME@{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME}!R\+C\+A\+C\+Simulink.\+cpp@{R\+C\+A\+C\+Simulink.\+cpp}}
+\subsubsection{\texorpdfstring{S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME}{S\_FUNCTION\_NAME}}
+{\footnotesize\ttfamily \#define S\+\_\+\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+N\+A\+ME~R\+C\+A\+C\+Simulink}
+
