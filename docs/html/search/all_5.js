@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['onestep',['oneStep',['../class_r_c_a_c.html#a956bb6a557f050d3808d5392fd3add20',1,'RCAC']]]
+  ['matlab_20and_20simulink',['MATLAB and Simulink',['../_m_a_t_l_a_band_simulink.html',1,'Advanced']]]
 ];

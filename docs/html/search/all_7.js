@@ -1,8 +1,12 @@
 var searchData=
 [
-  ['init',['init',['../class_r_c_a_c.html#af7b7133b676886d5010be725291c1a1d',1,'RCAC']]],
-  ['initfiltered',['initFiltered',['../class_r_c_a_c.html#aac17e469acf0f2457941d18ae02bfe07',1,'RCAC']]],
-  ['initfiltsimulink',['initFiltSimulink',['../_r_c_a_c_creator_8hpp.html#a7283243a03469a39d685519a92149e57',1,'RCACCreator.hpp']]],
-  ['initregressor',['initRegressor',['../class_r_c_a_c.html#a8dd38159eccbe85cbee4118020c90c88',1,'RCAC']]],
-  ['initsimulink',['initSimulink',['../_r_c_a_c_creator_8hpp.html#ade37a3e8eb11e33b6cad1d31ce1691fe',1,'RCACCreator.hpp']]]
+  ['rcac_5fcpp',['RCAC_cpp',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['rcac',['RCAC',['../class_r_c_a_c.html',1,'']]],
+  ['rcaccreator_2ehpp',['RCACCreator.hpp',['../_r_c_a_c_creator_8hpp.html',1,'']]],
+  ['rcacfilt',['rcacFilt',['../structrcac_filt.html',1,'']]],
+  ['rcacflags',['rcacFlags',['../structrcac_flags.html',1,'']]],
+  ['rcacgrad',['RCACGrad',['../class_r_c_a_c_grad.html',1,'RCACGrad'],['../class_r_c_a_c_grad.html#a62f433bc3efdfc5133105c5b2fd59ea6',1,'RCACGrad::RCACGrad()']]],
+  ['rcacgradflags',['rcacGradFlags',['../structrcac_grad_flags.html',1,'']]],
+  ['rcacrls',['RCACRLS',['../class_r_c_a_c_r_l_s.html',1,'RCACRLS'],['../class_r_c_a_c_r_l_s.html#aaac6f50062f37e04d10c40ba55063324',1,'RCACRLS::RCACRLS()']]],
+  ['rcacrlsflags',['rcacRlsFlags',['../structrcac_rls_flags.html',1,'']]]
 ];

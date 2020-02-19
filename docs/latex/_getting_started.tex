@@ -30,7 +30,7 @@ Using R\+LS \hyperlink{class_r_c_a_c}{R\+C\+AC} in your own code requires 6 main
 \item Including \char`\"{}\+R\+C\+A\+C\+Creator.\+hpp\char`\"{} and Eigen
 \item Defining and assigning the \hyperlink{structrcac_rls_flags}{rcac\+Rls\+Flags} struct
 \item Defining and assigning the \hyperlink{structrcac_filt}{rcac\+Filt} struct
-\item Initializing \hyperlink{class_r_c_a_c}{R\+C\+AC}
+\item Initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} using \hyperlink{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}{R\+C\+A\+C\+::init()}
 \item Using the \hyperlink{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}{R\+C\+A\+C\+::one\+Step()} method to propagate \hyperlink{class_r_c_a_c}{R\+C\+AC} by one step
 \item Using the \hyperlink{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}{R\+C\+A\+C\+::get\+Control()} method to get the associated control input
 \end{DoxyEnumerate}
@@ -52,29 +52,74 @@ This struct defines the base parameters such as controller order and sizes of th
 \item theta\+\_\+0\+: Initial value for the controller coefficients (Type\+: Eigen\+::\+Vector\+Xd) (ltheta by 1)
 \end{DoxyItemize}
 
-The parameter ltheta is not needed to be given to \hyperlink{class_r_c_a_c}{R\+C\+AC} directly but is defined as $ l_\theta = N_c l_u(l_u+l_y) $
+The parameter ltheta is not needed to be given to \hyperlink{class_r_c_a_c}{R\+C\+AC} directly but is useful for initialization. It is defined as $ l_\theta = N_c l_u(l_u+l_y) $
 
-An example struct for a 2 input 4 output plant with a 10th order controller and filtorder of 4 is given below 
+An example struct for a 2 input 2 output plant with a 10th order controller and filtorder of 4 is given below 
 \begin{DoxyCode}
 \hyperlink{structrcac_rls_flags}{rcacRlsFlags} FLAGS;
 FLAGS.lu = 2;
-FLAGS.lz = 4;
-FLAGS.ly = 4;
-FLAGS.Nc = 10;
+FLAGS.lz = 2;
+FLAGS.ly = 2;
+FLAGS.Nc = 4;
 \textcolor{keywordtype}{int} ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly); \textcolor{comment}{//Define ltheta to help create other variables}
 FLAGS.filtorder = 4;
 FLAGS.k\_0 = FLAGS.Nc;
-FLAGS.P0 = 100000*MatrixXd::Identity(ltheta, ltheta); \textcolor{comment}{//Create a matrix with diag values of 100000}
-FLAGS.Ru = MatrixXd::Zero(FLAGS.lu, FLAGS.lu); \textcolor{comment}{//Create a zero matrix (no weighting on control effort)}
-FLAGS.Rz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz); \textcolor{comment}{//Create the identity matrix}
+FLAGS.P0 = 100000*Eigen::MatrixXd::Identity(ltheta, ltheta); \textcolor{comment}{//Create a matrix with diag values of 100000}
+FLAGS.Ru = Eigen::MatrixXd::Zero(FLAGS.lu, FLAGS.lu); \textcolor{comment}{//Create a zero matrix (no weighting on control
+       effort)}
+FLAGS.Rz = Eigen::MatrixXd::Identity(FLAGS.lz, FLAGS.lz); \textcolor{comment}{//Create the identity matrix}
 FLAGS.lambda = 1;
-FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the RCAC coefficients to zero}
+FLAGS.theta\_0 = Eigen::MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the RCAC coefficients to zero}
 \end{DoxyCode}
 
 
 \subsection*{Creating the \hyperlink{structrcac_filt}{rcac\+Filt} struct }
 
+This struct defines the coefficients of the \hyperlink{class_r_c_a_c}{R\+C\+AC} filter $G_f$ and a filter for the performance measurements The list of members is
+\begin{DoxyItemize}
+\item filt\+Nu\+: Numerator coefficients of $G_f$ (Type\+: Eigen\+::\+Matrix\+Xd) (lz by lu$\ast$filtorder)
+\item filt\+Du\+: Denominator coefficients of $G_f$ (Type\+: Eigen\+::\+Matrix\+Xd) (lz by lu$\ast$(filtorder-\/1))
+\item filt\+Nz\+: Numerator coefficients of a filter on the performance measurement. Usually identity. (Type\+: Eigen\+::\+Matrix\+Xd) (lz by lz)
+\item filt\+Dz\+: Denominator coefficients of a filter on the performance measurement. Usually a zero matrix. (Type\+: Eigen\+::\+Matrix\+Xd) (lz by lz)
+\end{DoxyItemize}
+
+An example struct for a 2 input 2 output plant with a filterorder of 4 is given below. In this example, the comma initializer syntax from Eigen is used to construct filt\+Nu and filt\+Du 
+\begin{DoxyCode}
+\hyperlink{structrcac_filt}{rcacFilt} FILT;
+FILT.filtNu.resize(FLAGS.lz, FLAGS.lu*filtorder); \textcolor{comment}{//Set the size of the matrix to use the comma initializer
+       syntax}
+FILT.filtNu << 0, 0, 1, 0, 0.25, 1, 0.0625, 0.5, \textcolor{comment}{//Use the comma initializer syntax}
+               0, 0, 0, 3, 0, 0.75, 0, 0.1875;
+
+FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*(filtorder-1));
+FILT.filtDu << 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0;
+
+FILT.filtNz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz);
+FILT.filtDz =  MatrixXd::Zero(FLAGS.lz, FLAGS.lz);
+\end{DoxyCode}
+
+
+\subsection*{Initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} }
+
+Once the required rcac\+Rls\+Flag and \hyperlink{structrcac_filt}{rcac\+Filt} structs are created. \hyperlink{class_r_c_a_c}{R\+C\+AC} can be initialized. Initialization requires a flag struct, filt struct, and a string specifying the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used.
+
+
+\begin{DoxyCode}
+\textcolor{comment}{//String stating the type of RCAC to use}
+std::string rcacType = \textcolor{stringliteral}{"RLS"};
+
+\textcolor{comment}{//Create a pointer to an RCAC object}
+\hyperlink{class_r_c_a_c}{RCAC} *myRCAC;
+
+\textcolor{comment}{//initialize RCAC with flags defined by an rcacRlsFlags struct}
+myRCAC = myRCAC->\hyperlink{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}{init}<\hyperlink{structrcac_rls_flags}{rcacRlsFlags}>(FLAGS, FILT, rcacType);
+\end{DoxyCode}
+
+
 \subsection*{Putting it all together }
+
+Below is an example of using \hyperlink{class_r_c_a_c}{R\+C\+AC} to control a 2x2 M\+I\+MO system with 4th order controller using 3 markov parameters
 
 
 \begin{DoxyCode}
@@ -86,6 +131,7 @@ FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the
 
 \textcolor{keywordtype}{int} main()
 \{
+    \textcolor{comment}{//**************Simulation Parameters***************}
     \textcolor{comment}{//Initialize the plant}
     \textcolor{keywordtype}{int} lx = 2;
     \textcolor{keywordtype}{int} lu = 2;
@@ -110,7 +156,10 @@ FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the
 
     \textcolor{comment}{//End time of the simulation}
     \textcolor{keywordtype}{int} kend = 30;
+    \textcolor{comment}{//*************************************************}
 
+
+    \textcolor{comment}{//***************RCAC Parameters*******************}
     \textcolor{comment}{//Set Flags}
     \hyperlink{structrcac_rls_flags}{rcacRlsFlags} FLAGS;
     FLAGS.lu = lu;
@@ -147,8 +196,12 @@ FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the
     \hyperlink{class_r_c_a_c}{RCAC} *myRCAC;
     \textcolor{comment}{//Call the factory method to initialize RCAC}
     myRCAC = myRCAC->\hyperlink{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}{init}<\hyperlink{structrcac_rls_flags}{rcacRlsFlags}>(FLAGS, FILT, rcacType);
-    std::cout << \textcolor{stringliteral}{"RLS Init\(\backslash\)n"}; 
 
+    std::cout << \textcolor{stringliteral}{"RLS Init\(\backslash\)n"}; 
+    \textcolor{comment}{//**************************************************}
+
+
+    \textcolor{comment}{//******************Simulation**********************}
     \textcolor{comment}{//Run Simulation}
     VectorXd y(FLAGS.ly,1);
     VectorXd z(FLAGS.lz,1);
@@ -162,11 +215,13 @@ FLAGS.theta\_0 = MatrixXd::Zero(ltheta, 1); \textcolor{comment}{//Initialize the
 
         x = A*x + B*u;        
 
-        myRCAC->\hyperlink{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}{oneStep}(u, z, z);
-        u = myRCAC->\hyperlink{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}{getControl}();
+        myRCAC->\hyperlink{class_r_c_a_c_a956bb6a557f050d3808d5392fd3add20}{oneStep}(u, z, z); \textcolor{comment}{//Compute one step of RCAC}
+        u = myRCAC->\hyperlink{class_r_c_a_c_ad93e5753d1810d7c3b2f6fbf56857a51}{getControl}(); \textcolor{comment}{//Get the resulting control}
 
-        \textcolor{comment}{//std::cout << "y: " << y << ", z: " << z << ", u: " << u << std::endl;}
+        std::cout << \textcolor{stringliteral}{"y: "} << y << \textcolor{stringliteral}{", z: "} << z << \textcolor{stringliteral}{", u: "} << u << std::endl;
     \}
+    \textcolor{comment}{//****************************************************}
+
     \textcolor{keywordflow}{return}(0);
 \}
 \end{DoxyCode}

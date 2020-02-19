@@ -163,7 +163,7 @@ rcacFilt initFiltSimulink(
  * 
  * @param FLAGSmx Array from MATLAB in a special order for the flags (check the source file for the order)
  * @param FILTmx Array from MATLAB in a special order for the filter variables
- * @param FILT RCAC type taken from a matlab char string (C-style) and converted to a string (C++ string)
+ * @param rcacType RCAC type taken from a matlab char string (C-style) and converted to a string (C++ string)
  */
 //Function initSimulink, takes the array format of the RCAC variables from 
 //simulink and converts it to the struct format and returns a pointer to an RCAC

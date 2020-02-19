@@ -1,8 +1,10 @@
 var NAVTREEINDEX0 =
 {
+"_adding_r_c_a_c_types.html":[2,0],
 "_advanced.html":[2],
-"_debugging.html":[2,0],
+"_debugging.html":[2,2],
 "_getting_started.html":[1],
+"_m_a_t_l_a_band_simulink.html":[2,1],
 "_r_c_a_c_8hpp_source.html":[4,0,0],
 "_r_c_a_c_creator_8hpp.html":[4,0,1],
 "_r_c_a_c_creator_8hpp.html#a1514da1259b217343d732f38db5afdea":[4,0,1,2],

@@ -31,7 +31,7 @@ Using RLS RCAC in your own code requires 6 main steps
 1. Including "RCACCreator.hpp" and Eigen
 2. Defining and assigning the rcacRlsFlags struct
 3. Defining and assigning the rcacFilt struct
-4. Initializing RCAC
+4. Initializing RCAC using RCAC::init()
 5. Using the RCAC::oneStep() method to propagate RCAC by one step
 6. Using the RCAC::getControl() method to get the associated control input
 
@@ -51,33 +51,74 @@ The list of members is
 * lambda: The forgetting factor for RLS (Type: double)
 * theta_0: Initial value for the controller coefficients (Type: Eigen::VectorXd) (ltheta by 1)
 
-The parameter ltheta is not needed to be given to RCAC directly but is defined as
+The parameter ltheta is not needed to be given to RCAC directly but is useful for initialization. It is defined as
 \f$ l_\theta = N_c l_u(l_u+l_y) \f$
 
-An example struct for a 2 input 4 output plant with a 10th order controller and filtorder of 4 is given below
+An example struct for a 2 input 2 output plant with a 10th order controller and filtorder of 4 is given below
 ~~~~~~~~~~~~~~~~~~~{.cpp}
 rcacRlsFlags FLAGS;
 FLAGS.lu = 2;
-FLAGS.lz = 4;
-FLAGS.ly = 4;
-FLAGS.Nc = 10;
+FLAGS.lz = 2;
+FLAGS.ly = 2;
+FLAGS.Nc = 4;
 int ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly); //Define ltheta to help create other variables
 FLAGS.filtorder = 4;
 FLAGS.k_0 = FLAGS.Nc;
-FLAGS.P0 = 100000*MatrixXd::Identity(ltheta, ltheta); //Create a matrix with diag values of 100000
-FLAGS.Ru = MatrixXd::Zero(FLAGS.lu, FLAGS.lu); //Create a zero matrix (no weighting on control effort)
-FLAGS.Rz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz); //Create the identity matrix
+FLAGS.P0 = 100000*Eigen::MatrixXd::Identity(ltheta, ltheta); //Create a matrix with diag values of 100000
+FLAGS.Ru = Eigen::MatrixXd::Zero(FLAGS.lu, FLAGS.lu); //Create a zero matrix (no weighting on control effort)
+FLAGS.Rz = Eigen::MatrixXd::Identity(FLAGS.lz, FLAGS.lz); //Create the identity matrix
 FLAGS.lambda = 1;
-FLAGS.theta_0 = MatrixXd::Zero(ltheta, 1); //Initialize the RCAC coefficients to zero
+FLAGS.theta_0 = Eigen::MatrixXd::Zero(ltheta, 1); //Initialize the RCAC coefficients to zero
 ~~~~~~~~~~~~~~~~~~~
 
 
 Creating the rcacFilt struct
 --------------------------------
+This struct defines the coefficients of the RCAC filter \f$G_f\f$ and a filter for the performance measurements
+The list of members is
+* filtNu: Numerator coefficients of \f$G_f\f$ (Type: Eigen::MatrixXd) (lz by lu*filtorder)
+* filtDu: Denominator coefficients of \f$G_f\f$ (Type: Eigen::MatrixXd) (lz by lu*(filtorder-1))
+* filtNz: Numerator coefficients of a filter on the performance measurement. Usually identity. (Type: Eigen::MatrixXd) (lz by lz)
+* filtDz: Denominator coefficients of a filter on the performance measurement. Usually a zero matrix. (Type: Eigen::MatrixXd) (lz by lz)
+
+An example struct for a 2 input 2 output plant with a filterorder of 4 is given below. In this example, the comma initializer
+syntax from Eigen is used to construct filtNu and filtDu
+~~~~~~~~~~~~~~~~~~~{.cpp}
+rcacFilt FILT;
+FILT.filtNu.resize(FLAGS.lz, FLAGS.lu*filtorder); //Set the size of the matrix to use the comma initializer syntax
+FILT.filtNu << 0, 0, 1, 0, 0.25, 1, 0.0625, 0.5, //Use the comma initializer syntax
+               0, 0, 0, 3, 0, 0.75, 0, 0.1875;
+
+FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*(filtorder-1));
+FILT.filtDu << 0, 0, 0, 0, 0, 0,
+               0, 0, 0, 0, 0, 0;
+
+FILT.filtNz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz);
+FILT.filtDz =  MatrixXd::Zero(FLAGS.lz, FLAGS.lz);
+~~~~~~~~~~~~~~~~~~~
+
+
+Initializing RCAC
+-----------------
+Once the required rcacRlsFlag and rcacFilt structs are created. RCAC can be initialized.
+Initialization requires a flag struct, filt struct, and a string specifying the type of RCAC to be used.
+
+~~~~~~~~~~~~~~~~~~~{.cpp}
+//String stating the type of RCAC to use
+std::string rcacType = "RLS";
+
+//Create a pointer to an RCAC object
+RCAC *myRCAC;
+
+//initialize RCAC with flags defined by an rcacRlsFlags struct
+myRCAC = myRCAC->init<rcacRlsFlags>(FLAGS, FILT, rcacType);
+~~~~~~~~~~~~~~~~~~~
 
 
 Putting it all together
---------------------------------
+------------------------
+Below is an example of using RCAC to control a 2x2 MIMO system with 4th order controller using 3 markov parameters
+
 ~~~~~~~~~~~~~~~~~~~{.cpp}
 #include "Eigen/Core"
 #include "RCACCreator.hpp"
@@ -87,6 +128,7 @@ using namespace Eigen;
 
 int main()
 {
+    //**************Simulation Parameters***************
     //Initialize the plant
     int lx = 2;
     int lu = 2;
@@ -111,7 +153,10 @@ int main()
 
     //End time of the simulation
     int kend = 30;
+    //*************************************************
 
+
+    //***************RCAC Parameters*******************
     //Set Flags
     rcacRlsFlags FLAGS;
     FLAGS.lu = lu;
@@ -148,8 +193,12 @@ int main()
     RCAC *myRCAC;
     //Call the factory method to initialize RCAC
     myRCAC = myRCAC->init<rcacRlsFlags>(FLAGS, FILT, rcacType);
-    std::cout << "RLS Init\n"; 
 
+    std::cout << "RLS Init\n"; 
+    //**************************************************
+
+
+    //******************Simulation**********************
     //Run Simulation
     VectorXd y(FLAGS.ly,1);
     VectorXd z(FLAGS.lz,1);
@@ -163,11 +212,13 @@ int main()
 
         x = A*x + B*u;        
 
-        myRCAC->oneStep(u, z, z);
-        u = myRCAC->getControl();
+        myRCAC->oneStep(u, z, z); //Compute one step of RCAC
+        u = myRCAC->getControl(); //Get the resulting control
 
-        //std::cout << "y: " << y << ", z: " << z << ", u: " << u << std::endl;
+        std::cout << "y: " << y << ", z: " << z << ", u: " << u << std::endl;
     }
+    //****************************************************
+
     return(0);
 }
 ~~~~~~~~~~~~~~~~~~~
