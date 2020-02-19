@@ -114,6 +114,12 @@ RCAC *myRCAC;
 myRCAC = myRCAC->init<rcacRlsFlags>(FLAGS, FILT, rcacType);
 ~~~~~~~~~~~~~~~~~~~
 
+Compiling
+-----------------
+A program that uses RCAC can be compiled using the following command
+~~~~~~~~~~~~~~~~~
+g++ -O3 main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp -o main
+~~~~~~~~~~~~~~~~~
 
 Putting it all together
 ------------------------
