@@ -15,7 +15,6 @@ RCACGrad::RCACGrad(
 )
 {
     //Assign FLAGS and FILT variables to the specific RCAC object
-    //this->FLAGS = FLAGS;
     lz = FLAGS.lz;
     ly = FLAGS.ly;
     lu = FLAGS.lu;

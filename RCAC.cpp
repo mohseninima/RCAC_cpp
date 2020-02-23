@@ -147,15 +147,15 @@ void RCAC::computeFiltered()
     //for (int i = 0; i < FILT.filtNu.cols()/lu; i++)
     for (int i = 0; i < filtorder; i++)
     {
-        ufSum = FILT.filtNu.block(0, lu*i, lz, lu)*uBar[i] + ufSum;
-        PhifSum = FILT.filtNu.block(0, lu*i, lz, lu)*PhiBar[i] + PhifSum;
+        ufSum += FILT.filtNu.block(0, lu*i, lz, lu)*uBar[i];
+        PhifSum += FILT.filtNu.block(0, lu*i, lz, lu)*PhiBar[i];
     }
 
-    //Filter the Denominator coefficients coefficients
+    //Filter the Denominator coefficients
     for (int i = 0; i < (filtorder-1); i++)
     {
-        ufSum = ufSum - FILT.filtDu.block(0, lz*i, lz, lz)*ufBar[i];
-        PhifSum = PhifSum - FILT.filtDu.block(0, lz*i, lz, lz)*PhifBar[i];
+        ufSum -= FILT.filtDu.block(0, lz*i, lz, lz)*ufBar[i];
+        PhifSum -= FILT.filtDu.block(0, lz*i, lz, lz)*PhifBar[i];
     }
 
     //Add the sum to the list of past filtered values for future filtering

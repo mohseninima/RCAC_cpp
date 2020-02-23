@@ -120,7 +120,10 @@ static void mdlInitializeSizes(SimStruct *S)
 
     //clear the RCAC memory
     delete myRCAC;
-    mexPrintf("mdlInitSizes ok \n");
+    #if defined(MATLAB_MEX_FILE)
+        mexPrintf("mdlInitSizes ok \n");
+    #else
+    #endif
 }
 
 //Function mdlInitializeSampleTimes: This function tells simulink what the sample
@@ -140,7 +143,10 @@ static void mdlInitializeSampleTimes(SimStruct *S)
     }   
     //add offset to sample time if needed
     ssSetOffsetTime(S, 0, 0.0);
-    mexPrintf("Sample time ok \n");
+    #if defined(MATLAB_MEX_FILE)
+        mexPrintf("Sample time ok \n");
+    #else
+    #endif   
 }
 
 #define MDL_START

@@ -100,7 +100,7 @@ FILT.filtDz =  MatrixXd::Zero(FLAGS.lz, FLAGS.lz);
 
 Initializing RCAC
 -----------------
-Once the required rcacRlsFlag and rcacFilt structs are created. RCAC can be initialized.
+Once the required rcacRlsFlags and rcacFilt structs are created. RCAC can be initialized.
 Initialization requires a flag struct, filt struct, and a string specifying the type of RCAC to be used.
 
 ~~~~~~~~~~~~~~~~~~~{.cpp}
@@ -123,7 +123,7 @@ g++ -O3 main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp -o main
 
 Putting it all together
 ------------------------
-Below is an example of using RCAC to control a 2x2 MIMO system with 4th order controller using 3 markov parameters
+Below is an example of using RCAC to control a 2x2 2nd order MIMO system to follow a step command with a 4th order controller using 3 markov parameters
 
 ~~~~~~~~~~~~~~~~~~~{.cpp}
 #include "Eigen/Core"
@@ -185,8 +185,8 @@ int main()
     int Hnum = FLAGS.filtorder-1;
     FILT.filtNu.resize(FLAGS.lz, FLAGS.lu*(Hnum+1));
     FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*Hnum);
-    FILT.filtNu << 0,0, 1,0, 0.25,1, 0.0625,0.5,
-                   0,0, 0,3, 0,0.75, 0,0.1875; 
+    FILT.filtNu << 0, 0, 1, 0, 0.25, 1, 0.0625, 0.5,
+                   0, 0, 0, 3, 0, 0.75, 0, 0.1875; 
     FILT.filtDu << 0, 0, 0, 0, 0, 0,
                    0, 0, 0, 0, 0, 0;
     FILT.filtNz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz);
