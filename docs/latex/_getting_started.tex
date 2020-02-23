@@ -102,7 +102,7 @@ FILT.filtDz =  MatrixXd::Zero(FLAGS.lz, FLAGS.lz);
 
 \subsection*{Initializing \hyperlink{class_r_c_a_c}{R\+C\+AC} }
 
-Once the required rcac\+Rls\+Flag and \hyperlink{structrcac_filt}{rcac\+Filt} structs are created. \hyperlink{class_r_c_a_c}{R\+C\+AC} can be initialized. Initialization requires a flag struct, filt struct, and a string specifying the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used.
+Once the required \hyperlink{structrcac_rls_flags}{rcac\+Rls\+Flags} and \hyperlink{structrcac_filt}{rcac\+Filt} structs are created. \hyperlink{class_r_c_a_c}{R\+C\+AC} can be initialized. Initialization requires a flag struct, filt struct, and a string specifying the type of \hyperlink{class_r_c_a_c}{R\+C\+AC} to be used.
 
 
 \begin{DoxyCode}
@@ -127,7 +127,7 @@ g++ -O3 main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp -o main
 
 \subsection*{Putting it all together }
 
-Below is an example of using \hyperlink{class_r_c_a_c}{R\+C\+AC} to control a 2x2 M\+I\+MO system with 4th order controller using 3 markov parameters
+Below is an example of using \hyperlink{class_r_c_a_c}{R\+C\+AC} to control a 2x2 2nd order M\+I\+MO system to follow a step command with a 4th order controller using 3 markov parameters
 
 
 \begin{DoxyCode}
@@ -190,8 +190,8 @@ Below is an example of using \hyperlink{class_r_c_a_c}{R\+C\+AC} to control a 2x
     \textcolor{keywordtype}{int} Hnum = FLAGS.filtorder-1;
     FILT.filtNu.resize(FLAGS.lz, FLAGS.lu*(Hnum+1));
     FILT.filtDu.resize(FLAGS.lz, FLAGS.lz*Hnum);
-    FILT.filtNu << 0,0, 1,0, 0.25,1, 0.0625,0.5,
-                   0,0, 0,3, 0,0.75, 0,0.1875; 
+    FILT.filtNu << 0, 0, 1, 0, 0.25, 1, 0.0625, 0.5,
+                   0, 0, 0, 3, 0, 0.75, 0, 0.1875; 
     FILT.filtDu << 0, 0, 0, 0, 0, 0,
                    0, 0, 0, 0, 0, 0;
     FILT.filtNz = MatrixXd::Identity(FLAGS.lz, FLAGS.lz);
