@@ -145,17 +145,33 @@ void RCAC::computeFiltered()
 
     //Filter the numerator coefficients
     //for (int i = 0; i < FILT.filtNu.cols()/lu; i++)
+    //*
     for (int i = 0; i < filtorder; i++)
     {
         ufSum += FILT.filtNu.block(0, lu*i, lz, lu)*uBar[i];
-        PhifSum += FILT.filtNu.block(0, lu*i, lz, lu)*PhiBar[i];
+        //PhifSum += FILT.filtNu.block(0, lu*i, lz, lu)*PhiBar[i];
     }
-
-    //Filter the Denominator coefficients
-    for (int i = 0; i < (filtorder-1); i++)
+    //*/
+    //*
+    ////////TRYING to form the large matlab multiplication
+    //form the large PHIBar matrix
+    int ltheta = Nc*lu*(lu+ly);
+    Eigen::MatrixXd PhiBarnew(lu*filtorder,ltheta);
+    for (int i = 0; i < filtorder; i++)
     {
-        ufSum -= FILT.filtDu.block(0, lz*i, lz, lz)*ufBar[i];
-        PhifSum -= FILT.filtDu.block(0, lz*i, lz, lz)*PhifBar[i];
+        PhiBarnew.block(lu*i,0,lu,ltheta) = PhiBar[i];
+    }
+    PhifSum = FILT.filtNu*PhiBarnew;
+    //*/
+
+    //Filter the Denominator coefficients if the filter is IIR
+    if (isFiltIIR)
+    {
+        for (int i = 0; i < (filtorder-1); i++)
+        {
+            ufSum -= FILT.filtDu.block(0, lz*i, lz, lz)*ufBar[i];
+            PhifSum -= FILT.filtDu.block(0, lz*i, lz, lz)*PhifBar[i];
+        }
     }
 
     //Add the sum to the list of past filtered values for future filtering
@@ -204,6 +220,12 @@ void RCAC::initFiltered()
     for (int i = 1 ; i <= FILT.filtDz.cols()/lz; i++)
     {
         zfBar.push_front(zBarTemp);
+    }
+
+    //Disable denominator filtering if the filter is FIR
+    if (FILT.filtDu.norm() < 1e-8)
+    {
+        isFiltIIR = false;
     }
 }
 

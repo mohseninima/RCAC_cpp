@@ -270,6 +270,9 @@ class RCAC
 
         //Counter: if kk >= k_0, start RCAC control input
         int kk = 1;
+
+    private:
+        bool isFiltIIR = true;
 };
 
 #endif
