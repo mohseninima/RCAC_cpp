@@ -156,10 +156,13 @@ void RCAC::computeFiltered()
     ////////TRYING to form the large matlab multiplication
     //form the large PHIBar matrix
     int ltheta = Nc*lu*(lu+ly);
-    Eigen::MatrixXd PhiBarnew(lu*filtorder,ltheta);
+    Eigen::MatrixXd PhiBarnew(lu*filtorder, ltheta);
+    //Eigen::SparseMatrix<double, Eigen::RowMajor> PhiBarnewSparse(lu*filtorder,ltheta);
+    //PhiBarnewSparse.reserve(Eigen::VectorXi::Constant(lu*filtorder,Nc*(lu+ly)));
     for (int i = 0; i < filtorder; i++)
     {
-        PhiBarnew.block(lu*i,0,lu,ltheta) = PhiBar[i];
+        PhiBarnew.middleRows(lu*i, lu) = PhiBar[i];
+        //PhiBarnewSparse.middleRows(lu*i,lu) = PhiBar[i].sparseView();
     }
     PhifSum = FILT.filtNu*PhiBarnew;
     //*/
