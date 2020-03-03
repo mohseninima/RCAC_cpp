@@ -36,7 +36,7 @@ RCACGrad::RCACGrad(
     kk = 1;
 
     //initialize the gradient to a zero vector
-    gradient.Zero(Nc*lu*(lu+lu));
+    gradient.Zero(Nc*lu*(lu+ly));
 
 }
 
