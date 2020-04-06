@@ -1,6 +1,8 @@
 var annotated_dup =
 [
     [ "RCAC", "class_r_c_a_c.html", "class_r_c_a_c" ],
+    [ "RCACCumgrad", "class_r_c_a_c_cumgrad.html", "class_r_c_a_c_cumgrad" ],
+    [ "rcacCumgradFlags", "structrcac_cumgrad_flags.html", "structrcac_cumgrad_flags" ],
     [ "rcacFilt", "structrcac_filt.html", "structrcac_filt" ],
     [ "rcacFlags", "structrcac_flags.html", "structrcac_flags" ],
     [ "RCACGrad", "class_r_c_a_c_grad.html", "class_r_c_a_c_grad" ],
