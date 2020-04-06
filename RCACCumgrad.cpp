@@ -38,13 +38,13 @@ RCACCumgrad::RCACCumgrad(
     kk = 1;
 
     //initialize the gradient to a zero vector
-    gradient.Zero(Nc*lu*(lu+ly));
+    gradient = Eigen::VectorXd::Zero(Nc*lu*(lu+ly));
 
     //Initialize the Asum matrix to a zero matrix
-    Asum.Zero(Nc*lu*(lu+ly),Nc*lu*(lu+ly));
+    Asum = Eigen::MatrixXd::Zero(Nc*lu*(lu+ly),Nc*lu*(lu+ly));
 
     //Initialize the bsum vector to a zero vector
-    bsum.Zero(Nc*lu*(lu+ly));
+    bsum = Eigen::VectorXd::Zero(Nc*lu*(lu+ly));
 }
 
 void RCACCumgrad::coeffUpdate(
@@ -56,6 +56,9 @@ void RCACCumgrad::coeffUpdate(
     //Change the computation of the gradient/stepsize for different forgetting factors
     if (lambda == 1)
     {
+        //Fast way to compute Phif'Phif + Asum ?
+        //Asum.template selfadjointView<Eigen::Lower>().rankUpdate(PhifBar[0].adjoint());
+        //Asum.template triangularView<Eigen::Upper>() = Asum.transpose();
         Asum.noalias() += (PhifBar[0].transpose()*PhifBar[0]);
         bsum.noalias() += (PhifBar[0].transpose())*(zIn - ufBar[0]);
     }
