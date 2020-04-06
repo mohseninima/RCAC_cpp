@@ -116,7 +116,7 @@ z_hat = zeros(lz,steps);
 phi_filt = zeros(lz,ltheta, steps);
 phi = zeros(lphi,steps);
 uf = zeros(lz,steps);
-P = zeros(ltheta, ltheta,steps);
+%P = zeros(ltheta, ltheta,steps);
 theta = zeros(ltheta,steps);
 
 %% Init
@@ -138,6 +138,15 @@ P0 = FLAG.Rtheta^-1; P0 = 1e5*eye(ltheta);
 mexFLAGS = [lz;ly;lu;Nc;Hnum+1;k0+1;P0(:);FLAG.Ru(:);FLAG.Rz(:);FLAG.lambda;FLAG.theta_0]';
 mexNu = FILT.Nu; mexDu = FILT.Du; mexNz = FILT.Nz; mexDz = FILT.Dz;
 mexFILT = [mexNu(:);mexDu(:);mexNz(:);mexDz(:)]';
+
+%rcactype = 'Grad';
+%[lz;ly;lu;Nc;filtorder;k0;alpha;theta_0]
+%mexFLAGS = [lz;ly;lu;Nc;Hnum+1;k0+5;0.1;FLAG.theta_0]';
+
+rcactype = 'Cumgrad';
+%alpha = step scaling, gamm = regularization, lambda = forgetting
+%[lz;ly;lu;Nc;filtorder;k0;alpha;gamma;lambda;theta_0]
+mexFLAGS = [lz;ly;lu;Nc;Hnum+1;k0+5;0.1;0;1;FLAG.theta_0]';
 
 Gtest = tf(ss(A,B,C,[0],ts));
 

@@ -69,21 +69,21 @@ void RCACCumgrad::coeffUpdate(
     }
     
     //Use different computation of the gradient for different regularization values
-    if (gamma > 0) //Cumgrad with regularization
-    {
-        stepSize = alpha/(Asum.norm()); //ignoring regularization in the stepsize update
-        gradient = Asum*theta + bsum + gamma*theta;
-    }
-    else if (lambda == 0 && gamma > 0) //Just regular gradient with regularization
+    if (lambda == 0 && gamma > 0) //Just regular gradient with regularization
     {
         stepSize = alpha/pow(PhifBar[0].norm(),2); //ignoring regularization in the stepsize update
         gradient = PhifBar[0].transpose()*(zIn - ufBar[0] + PhifBar[0]*theta)
                    + gamma*theta;
     }
-    else if (lambda == 0)
+    else if (lambda == 0) //Just regular gradient
     {
         stepSize = alpha/pow(PhifBar[0].norm(),2);
         gradient = PhifBar[0].transpose()*(zIn - ufBar[0] + PhifBar[0]*theta);
+    }
+    else if (gamma > 0) //Cumgrad with regularization
+    {
+        stepSize = alpha/(Asum.norm()); //ignoring regularization in the stepsize update
+        gradient = Asum*theta + bsum + gamma*theta;
     }
     else //Cumgrad with no regularization
     {
