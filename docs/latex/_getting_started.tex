@@ -121,7 +121,7 @@ myRCAC = myRCAC->\hyperlink{class_r_c_a_c_af7b7133b676886d5010be725291c1a1d}{ini
 
 A program that uses \hyperlink{class_r_c_a_c}{R\+C\+AC} can be compiled using the following command 
 \begin{DoxyCode}
-g++ -O3 main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp -o main
+g++ -O3 -march=native main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp RCACCumGrad.cpp -o main
 \end{DoxyCode}
 
 

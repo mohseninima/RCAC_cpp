@@ -1,0 +1,72 @@
+\hypertarget{structrcac_cumgrad_flags}{}\section{rcac\+Cumgrad\+Flags Struct Reference}
+\label{structrcac_cumgrad_flags}\index{rcac\+Cumgrad\+Flags@{rcac\+Cumgrad\+Flags}}
+
+
+{\ttfamily \#include $<$R\+C\+A\+C\+Cumgrad.\+hpp$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_ae69efcbfeafcb0a10385a923cb1e9aba}\label{structrcac_cumgrad_flags_ae69efcbfeafcb0a10385a923cb1e9aba}} 
+int {\bfseries lz}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a1372d7561b3a8f3fe00cd51305ef177b}\label{structrcac_cumgrad_flags_a1372d7561b3a8f3fe00cd51305ef177b}} 
+int {\bfseries ly}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a5b724b3a874057c33058d47567e9b519}\label{structrcac_cumgrad_flags_a5b724b3a874057c33058d47567e9b519}} 
+int {\bfseries lu}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a1492e06fc412a49d105d63e47c491b23}\label{structrcac_cumgrad_flags_a1492e06fc412a49d105d63e47c491b23}} 
+int {\bfseries Nc}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a9deebbd1c765fcf57fc65cf0d02fc0c2}\label{structrcac_cumgrad_flags_a9deebbd1c765fcf57fc65cf0d02fc0c2}} 
+Eigen\+::\+Vector\+Xd {\bfseries theta\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_ae2af882c2622317cf6aa68bd3e2aa7d3}\label{structrcac_cumgrad_flags_ae2af882c2622317cf6aa68bd3e2aa7d3}} 
+int {\bfseries filtorder}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a27af563cf27ad3ec5ad7d7b74fa3aaf7}\label{structrcac_cumgrad_flags_a27af563cf27ad3ec5ad7d7b74fa3aaf7}} 
+int {\bfseries k\+\_\+0}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_ad7587ead9fff9d79f931f63af48e949b}\label{structrcac_cumgrad_flags_ad7587ead9fff9d79f931f63af48e949b}} 
+double {\bfseries alpha}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a81df90a64a670a750a206b4b0729ac71}\label{structrcac_cumgrad_flags_a81df90a64a670a750a206b4b0729ac71}} 
+double {\bfseries gamma}
+\item 
+\mbox{\Hypertarget{structrcac_cumgrad_flags_a0d2104761c5640affa1badc00563317e}\label{structrcac_cumgrad_flags_a0d2104761c5640affa1badc00563317e}} 
+double {\bfseries lambda}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This struct contains the basic parameters needed for gradient \hyperlink{class_r_c_a_c}{R\+C\+AC} to work.
+
+
+\begin{DoxyParams}{Parameters}
+{\em lz} & Number of performance measurements \\
+\hline
+{\em ly} & Number of sensor measurements \\
+\hline
+{\em lu} & Number of control inputs \\
+\hline
+{\em Nc} & Controller order \\
+\hline
+{\em theta\+\_\+0} & Eigen vector with initial controller coefficients. Usually a vector of zeros \\
+\hline
+{\em filtorder} & Order of the filter ( $G_f$) \\
+\hline
+{\em k\+\_\+0} & Minimum number of steps to run before starting the controller (usually k\+\_\+0 = Nc) \\
+\hline
+{\em alpha} & Step size scaling for gradient descent \\
+\hline
+{\em gamma} & L2 regularization parameter, $>$= 0, (usually gamma = 0) \\
+\hline
+{\em lambda} & forgetting factor, 0 $<$= lambda $<$= 1 (usually lambda = 1) \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+R\+C\+A\+C\+Cumgrad.\+hpp\end{DoxyCompactItemize}

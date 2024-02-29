@@ -118,7 +118,7 @@ Compiling
 -----------------
 A program that uses RCAC can be compiled using the following command
 ~~~~~~~~~~~~~~~~~
-g++ -O3 -march=native main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp -o main
+g++ -O3 -march=native main.cpp RCAC.cpp RCACRLS.cpp RCACGrad.cpp RCACCumGrad.cpp -o main
 ~~~~~~~~~~~~~~~~~
 
 Putting it all together

@@ -4,11 +4,12 @@
 #include "RCAC.hpp"
 #include "RCACRLS.hpp"
 #include "RCACGrad.hpp"
+#include "RCACCumgrad.hpp"
 //#include <any>
 
 
 //Name: Nima Mohseni
-//Date: 1/20/2020
+//Date: 4/5/2020
 //Purpose: This file contains the implementation of the factory function to
 //generate new RCAC versions
 
@@ -22,6 +23,7 @@
 //RCAC Types: define your RCAC typenames here
 std::string useRLS = "RLS";
 std::string useGrad = "Grad";
+std::string useCumgrad = "Cumgrad";
 
 /**
  * A factory method that creates a pointer to the specific type of RCAC you want to use.
@@ -54,6 +56,12 @@ RCAC* RCAC::init(
         //rcacGradFlags FLAGSnew = std::any_cast<rcacGradFlags>(FLAGStemp);
         rcacGradFlags *FLAGSnew = (rcacGradFlags*)FLAGStemp;
         return new RCACGrad(*FLAGSnew, FILT);
+    }
+    else if (rcacType == useCumgrad)
+    {
+        //rcacGradFlags FLAGSnew = std::any_cast<rcacGradFlags>(FLAGStemp);
+        rcacCumgradFlags *FLAGSnew = (rcacCumgradFlags*)FLAGStemp;
+        return new RCACCumgrad(*FLAGSnew, FILT);
     }
     else
     {
@@ -281,6 +289,51 @@ RCAC* initSimulink(
 
         //create RCACGrad
         return new RCACGrad(FLAGS, FILT);
+
+    }
+    else if (rcacType == useCumgrad)
+    {
+        //load FLAGSmx into flags struct
+        //mxArray must be in format
+        //[lz; ly; lu; Nc; filtorder; k_0; alpha; gamma; lambda; theta_0]
+        //Matrices must be transposed and then vectorized
+
+        rcacCumgradFlags FLAGS;
+        //load the first 6 variables
+        int flagsIndex = 0;
+        FLAGS.lz = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.ly = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.lu = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.Nc = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.filtorder = FLAGSmx[flagsIndex]; flagsIndex++;
+        FLAGS.k_0 = (int)FLAGSmx[flagsIndex]; flagsIndex++;
+
+        //load the step size scaling
+        FLAGS.alpha = FLAGSmx[flagsIndex]; flagsIndex++;
+
+        //load regularization
+        FLAGS.gamma = FLAGSmx[flagsIndex]; flagsIndex++;
+
+        //load forgetting factor
+        FLAGS.lambda = FLAGSmx[flagsIndex]; flagsIndex++;
+
+        //load initial controller coefficients
+        int ltheta = FLAGS.Nc*FLAGS.lu*(FLAGS.lu+FLAGS.ly);
+
+        //load theta_0
+        FLAGS.theta_0.resize(ltheta); //Tell eigen the matrix size
+        FLAGS.theta_0 = Eigen::Map<Eigen::VectorXd>(&FLAGSmx[flagsIndex], (double)ltheta, 1);
+        for (int i = 0; i < ltheta; i++)
+        {
+            //FLAGS.theta_0 << FLAGSmx[flagsIndex]; 
+            flagsIndex++;
+        }
+
+        rcacFilt FILT = initFiltSimulink(FLAGS.lz, FLAGS.ly, FLAGS.lu,
+                                         FLAGS.Nc, FLAGS.filtorder, FILTmx);
+
+        //create RCACGrad
+        return new RCACCumgrad(FLAGS, FILT);
 
     }
     else
